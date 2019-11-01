@@ -14,7 +14,7 @@
 		$result = $mysqli->query("SELECT * FROM clients");
 	}
 	
-	vardump($result);
+	// vardump($result);
 
 ?>
 <!DOCTYPE html>
@@ -27,10 +27,7 @@
 
 		<nav class="navbar navbar-light bg-light">
 			<a class="navbar-brand">Navbar</a>
-			<form class="form-inline">
-				<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-			</form>
+			<a class="form-inline" href="../admin/c_logout.php">Logout</a>
 		</nav>
 
 		<div class="container-fluid">
