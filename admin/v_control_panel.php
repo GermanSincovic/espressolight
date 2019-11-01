@@ -26,37 +26,48 @@
 	<body>
 
 		<nav class="navbar navbar-light bg-light">
-			<a class="navbar-brand">Navbar</a>
-			<a class="form-inline" href="../admin/c_logout.php">Logout</a>
+			<a class="navbar-brand"><img src="../img/logo.png" class="mr-3" width="50" height="50" alt="EspressoLIGHT"><strong><i>Espresso <small class="text-muted">light</small></i></strong></a>
+			<a class="form-inline btn btn-secondary" href="../admin/c_logout.php">Logout</a>
 		</nav>
 
 		<div class="container-fluid">
 			<div class="row justify-content-center">
-				<div class="col-10">
-					<table class="table">
-						<thead>
-							<tr>
-								<th scope="col">ID</th>
-								<th scope="col">Название</th>
-								<th scope="col">Владелец</th>
-								<th scope="col">Телефон</th>
-								<th scope="col">E-mail</th>
-								<th scope="col">Начало использования</th>
-								<th scope="col">Активность</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<th scope="row">1</th>
-								<td>Brown Coffee</td>
-								<td>Александр</td>
-								<td>+3801112223344</td>
-								<td>shtoto@gmail.com</td>
-								<td>01.11.2019</td>
-								<td>&#10004;</td>
-							</tr>
-						</tbody>
-					</table>
+				<div class="col-10 mt-5">
+					<?
+					// vardump($result);
+					if ($result->num_rows == 0) {?>
+
+							<h6>Клиентов пока нет.</h6>
+
+					<?} else {?>
+
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">ID</th>
+										<th scope="col">Название</th>
+										<th scope="col">Владелец</th>
+										<th scope="col">Телефон</th>
+										<th scope="col">E-mail</th>
+										<th scope="col">Начало использования</th>
+										<th scope="col">Активность</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th scope="row">1</th>
+										<td>Brown Coffee</td>
+										<td>Александр</td>
+										<td>+3801112223344</td>
+										<td>shtoto@gmail.com</td>
+										<td>01.11.2019</td>
+										<td>&#10004;</td>
+									</tr>
+								</tbody>
+							</table>
+
+					<?}?>
+
 				</div>
 			</div>
 		</div>
