@@ -12,9 +12,7 @@ if($_SESSION['password'] == md5('admin')){
 
 	getDbConnect();
 
-	//include_once('admin/v_control_panel.php');
-
-	echo 'Goooood!';
+	include_once('admin/v_control_panel.php');
 
 } else {
 

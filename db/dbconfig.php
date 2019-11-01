@@ -4,6 +4,7 @@ define("DOMAIN", "http://espressolight.loc/");
 
 function getDbConnect($_serv = null){
 
+    global $mysqli;
 	$dbHost = "localhost";
 	$dbName = "espresso";
 	$dbUser = "admin";
