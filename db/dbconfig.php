@@ -24,9 +24,9 @@ function getDbConnect($_serv = null){
     if(mysql_select_db($dbName, $con)){
         return $con;
     }else{
-        mysql_query("CREATE DATABASE espresso");
-        mysql_select_db($dbName, $con);
-        mysql_query("CREATE TABLE `clients` (
+        var_dump(mysql_query("CREATE DATABASE espresso"));
+        var_dump(mysql_select_db($dbName, $con));
+        var_dump(mysql_query("CREATE TABLE `clients` (
                     `id` INT NOT NULL AUTO_INCREMENT,
                     `name` VARCHAR(250) NOT NULL,
                     `created` TIMESTAMP NOT NULL,
@@ -35,7 +35,7 @@ function getDbConnect($_serv = null){
                     `email` VARCHAR(50) NOT NULL,
                     `owner` VARCHAR(250) NOT NULL,
                     PRIMARY KEY (`id`) )
-                    COLLATE='utf8_general_ci';");
+                    COLLATE='utf8_general_ci';"));
     }
 
 }
