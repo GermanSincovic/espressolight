@@ -13,8 +13,8 @@
 				<div class="col-3">
 					<form class="text-center border rounded p-5" action="/" method="POST">
 					    <p class="h4 mb-4">Sign in</p>
-					    <input type="password" name="password" class="form-control mb-4" placeholder="Password">
-					    <button class="btn btn-info btn-block my-4" type="submit">Enter</button>
+					    <input type="password" name="password" class="form-control mb-4" placeholder="Password" required="required">
+					    <button class="btn btn-secondary btn-block my-4" type="submit">Enter</button>
 					</form>
 				</div>
 			</div>

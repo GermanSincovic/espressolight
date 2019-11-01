@@ -26,7 +26,12 @@
 	<body>
 
 		<nav class="navbar navbar-light bg-light">
-			<a class="navbar-brand"><img src="../img/logo.png" class="mr-3" width="50" height="50" alt="EspressoLIGHT"><strong><i>Espresso <small class="text-muted">light</small></i></strong></a>
+			<a class="navbar-brand">
+				<img src="../img/logo.png" class="mr-3" width="50" height="50" alt="EspressoLIGHT">
+				<strong>
+					<i>Espresso <small class="text-muted">light</small></i>
+				</strong>
+			</a>
 			<a class="form-inline btn btn-secondary" href="../admin/c_logout.php">Logout</a>
 		</nav>
 
