@@ -1,29 +1,20 @@
 <?
-
 class DB_connection{
 
-	public $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS);
+	public $db_link;
 
-	public function __construct(){
-
-		$this -> mysqli -> select_db(DB_NAME);
-
-		if($this -> mysqli -> errno){
+	public function __construct($obj){
+		$this -> db_link = $obj;
+		$this -> db_link -> select_db(DB_NAME);
+		if($this -> db_link -> errno){
 			try {
-		        $this -> mysqli -> query("CREATE DATABASE ".DB_NAME);
+		        $this -> db_link -> query("CREATE DATABASE ".DB_NAME);
 		    } finally {
-		        $this -> mysqli -> select_db(DB_NAME);
+		        $this -> db_link -> select_db(DB_NAME);
 		    }
 		}
-
-		return $mysqli;
-
 	}
-
-	public function close(){
-		$this -> mysqli -> close();
-	}
-
+	
 }
 
 ?>
