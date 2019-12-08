@@ -11,15 +11,13 @@ class API{
         header("Content-Type: application/json");
 
 		global $Router;
-		// var_dump($Router -> component);
-		// var_dump($Router -> subcomponent == '');
 
 		$this -> method = $_SERVER['REQUEST_METHOD'];
 		$this -> request_url = $Router -> path;
-		$this -> request_body = file_get_contents('php://input');
+		$this -> request_body = json_decode(file_get_contents('php://input'), TRUE);
 		switch ($this -> method) {
 			case 'GET': $this -> executeGET(); break;
-			case 'POST': echo 'POST'; break;
+			case 'POST': $this -> executePOST(); break;
 			case 'PUT': echo 'PUT'; break;
 			case 'DELETE': echo 'DELETE'; break;
 			default: http_response_code(405); die; break;
@@ -35,26 +33,50 @@ class API{
 		}
 	}
 
+	private function executePOST(){
+		global $Router;
+		if ($Router -> subcomponent){
+			$q = "UPDATE `".$Router -> component."` SET ";
+			$tmpcol = []; $i = 0;
+			foreach($this -> request_body as $key => $value){
+				if(is_array($key) || is_array($value)){ $this -> error(400); }
+				$tmpcol[$i] = "`".$key."`='".$value."'";
+				$i++;
+			}
+			$q = $q.implode(", ", $tmpcol)." WHERE `id`='".$Router -> subcomponent."'";
+			$this -> sendRequest($q);
+		} else {
+			$this -> error(400);
+		}
+	}
+
 	private function sendRequest($query){
 		global $DB;
 		$res = $DB -> query($query);
-		if($DB -> errno){
-			http_response_code(404);
-			die;
-		}
-		print $this -> formatResponse($res);
+		if($DB -> errno) { $this -> error(400); }
+		echo $this -> formatResponse($res);
 	}
 
 	private function formatResponse($arr){
-		$tmparr = [];
-		if($arr){
-			while ($row = $arr->fetch_assoc()) {
-				$tmparr[$row["id"]] = $row;
+		global $DB;
+		if($this -> method == "POST" && !$DB -> errno){
+			return json_encode(["status"=>'OK']);
+		} else {
+			$tmparr = [];
+			if($arr){
+				while ($row = $arr->fetch_assoc()) {
+					$tmparr[$row["id"]] = $row;
+				}
 			}
+			$JSON = json_encode($tmparr);
+			return $JSON;
 		}
-		$JSON = json_encode($tmparr);
-		return $JSON;
-	} 
+	}
+
+	private function error($num){
+		http_response_code($num);
+		die;
+	}
 
 }
 ?>
