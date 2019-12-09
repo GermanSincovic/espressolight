@@ -12,6 +12,7 @@ define("DB_USER", "admin");
 
 define("DB_PASS", "admin");
 
+// loading all classes (all files by mask m_*.php)
 function load_models(){
 	$files = scandir(__DIR__);
 	foreach ($files as $value) {

@@ -1,4 +1,7 @@
 <?
+/*
+	Completed API entity
+*/
 class API{
 
 	private $method;
@@ -30,7 +33,7 @@ class API{
 		global $DB;
 		$this -> response = $DB -> query($this -> query);
 		if ($DB -> errno) {
-			$this -> message(500);
+			$this -> message(400);
 			die;
 		}
 	}
