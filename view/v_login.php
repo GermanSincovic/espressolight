@@ -34,6 +34,7 @@
 		    		dataType: "text",
 		            success: function(data){
 						$("#main").html(data);
+
 					} 
 		        });
 			}
