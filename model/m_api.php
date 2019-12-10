@@ -13,6 +13,7 @@ class API{
 	private $response;
 
 	public function __construct(){
+
 		header("Access-Control-Allow-Orgin: *");
         header("Access-Control-Allow-Methods: *");
         header("Content-Type: application/json");
@@ -34,7 +35,6 @@ class API{
 		$this -> response = $DB -> query($this -> query);
 		if ($DB -> errno) {
 			$this -> message(400);
-			die;
 		}
 	}
 
@@ -63,47 +63,34 @@ class API{
 			case 'POST': $q = "UPDATE "; break; 
 			case 'PUT': $q = "INSERT INTO "; break;
 			case 'DELETE': $q = "DELETE FROM "; break;
-			default: $this -> message(405, "Method Not Allowed"); break;
+			default: $this -> message(405); break;
 		}
 
 		// forming TABLE according COMPONENT
 		if($component){
 			$q .= "`".$component."` ";
 		} else {
-			$this -> message(400, "Bad Request"); die;
+			$this -> message(400);
 		}
 
-		// forming OPTIONS according REQUEST_BODY
-		if($method == "POST" || $method == "PUT"){
-			if($body && is_array($body)){
-				$tmpstr = [];
-				$i = 0;
-				foreach ($body as $key => $value) {
-					$tmpstr[$i] = "`".$key."`='".$value."'";
-					$i++;
-				}
-				$q .= "SET ".implode(", ", $tmpstr)." ";
-			} else {
-				$this -> message(400, "Bad Request"); die;
+		// forming WHERE according REQUEST_BODY and SUBCOMPONENT
+		if($body && !$subcomponent){
+			switch ($method) {
+				case 'GET': $q .= "WHERE " . $this -> parseRequestBody($body, 'AND'); break;
+				case 'POST': $q .= "SET " . $this -> parseRequestBody($body, ','); break; 
+				case 'PUT': $q .= "SET " . $this -> parseRequestBody($body, ','); break;
+				case 'DELETE': $q .= "WHERE " . $this -> parseRequestBody($body, 'AND'); break;
 			}
+		} elseif (!$body && $subcomponent) {
+			if($method == "GET"){
+				$q .= "WHERE `id`='" . $subcomponent . "'";
+			} else {
+				$this -> message(400);
+			}
+		} else {
+			$this -> message(400);
 		}
 
-		// forming WHERE-condition according SUBCOMPONENT
-		switch ($method) {
-			case 'GET': 	if($subcomponent){ $q .= "WHERE `id`=".$subcomponent; } break;
-			case 'POST': 	if($subcomponent){ 
-								$q .= "WHERE `id`=".$subcomponent; 
-							} else {
-								$this -> message(400, "Bad Request"); die;
-							} break;
-			case 'PUT': 	if($subcomponent){ $this -> message(400, "Bad Request"); die; } break;
-			case 'DELETE': 	if(!$subcomponent){ 
-								$this -> message(400, "Bad Request"); die; 
-							} else { 
-								$q .= "WHERE `id`=".$subcomponent; 
-							} break;
-			default: $this -> message(400, "Bad Request"); die; break;
-		}
 		$this -> query = $q;
 	} 
 
@@ -152,7 +139,23 @@ class API{
     	);
 		header('HTTP/1.1 '.$num.' '.$http[$num]); 				
 		http_response_code($num);
-		echo json_encode([ "code" => $num, "status" => $http[$num] ]);
+		echo json_encode([ "status" => $http[$num] ]);
+		die;
 	}
+
+	private function parseRequestBody($array, $separator){
+		$string = '';
+		$tmpstr = [];
+		$i = 0;
+		if($array && is_array($array)){
+			foreach ($array as $key => $value) {
+				$tmpstr[$i] = "`".$key."`='".$value."'";
+				$i++;
+			}
+			$string .= implode($separator." ", $tmpstr)." ";
+		}
+		return $string;
+	}
+
 }
 ?>

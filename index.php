@@ -10,11 +10,15 @@ if($Router -> interface == 'api'){
 
 	$API = new API();
 
-} else {
+} 
+// else {
 
-	include('view/v_control_panel.php');
+// 	if(!$_SESSION['auth']){
+// 		// include('view/v_control_panel.php');
+// 		include('view/v_login.php');
+// 	}
 
-}
+// }
 
 
 ?>
