@@ -1,7 +1,11 @@
 <?
 class User{
 	
+	public $id;
+	public $login;
 	public $role;
+	public $name;
+	public $surname;
 
 	public function __construct(){
 		$this -> role = "anonimous";
@@ -12,8 +16,14 @@ class User{
 		$tmpArr['password'] = md5($_POST['password']);
 		$tmpObj = new API("GET", "users", false, $tmpArr);
 		$result = $tmpObj -> response;
-		$_SESSION['a'] = $result;
-		header("Location: ".DOMAIN);
+		if (count($result) == 1) {
+			$this -> id = $result[1]['id'];
+			$this -> login = $result[1]['login'];
+			$this -> role = $result[1]['role'];
+			$this -> name = $result[1]['name'];
+			$this -> surname = $result[1]['surname'];
+			$_SESSION["auth"] = $this;
+		}
 	}
 
 	public function logout(){

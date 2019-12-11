@@ -17,11 +17,12 @@ if($Router -> interface == 'api'){
 	if( !$User ){ $User = new User(); }
 	if( $_POST['login']  ){ $User ->  login(); }
 	if( $_POST['logout'] ){ $User -> logout(); }
-	if( $User -> role == 'anonimous'){
-		var_dump($_SESSION['a']);
-		include('view/v_login.php');
+
+	switch ($_SESSION["auth"] -> role) {
+		case 'anonimous': include('view/v_login.php'); break;
+		case 'master': echo "master"; break;
+		case 'admin': echo "admin"; break;
 	}
-	// 
 }
 
 
