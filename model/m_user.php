@@ -8,11 +8,20 @@ class User{
 	}
 
 	public function login(){
-		echo "login";
+		$tmpArr['login'] = $_POST['login'];
+		$tmpArr['password'] = md5($_POST['password']);
+		$tmpObj = new API("GET", "users", false, $tmpArr);
+		$result = $tmpObj -> response;
+		$_SESSION['a'] = $result;
+		header("Location: ".DOMAIN);
 	}
 
 	public function logout(){
-		echo "logout";
+		session_start();
+		session_destroy();
+		global $DB;
+		unset($DB);
+		header('Location: /');
 	}
 }
 ?>

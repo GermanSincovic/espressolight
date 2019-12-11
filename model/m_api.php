@@ -10,9 +10,9 @@ class API{
 	private $request_body;
 
 	private $query;
-	private $response;
+	public $response;
 
-	public function __construct(){
+	public function __construct($method = false, $component = false, $subcomponent = false, $request_body = false){
 
 		header("Access-Control-Allow-Orgin: *");
         header("Access-Control-Allow-Methods: *");
@@ -20,17 +20,18 @@ class API{
 
 		global $Router;
 
-		$this -> method = $_SERVER['REQUEST_METHOD'];
-		$this -> component = $Router -> component;
-		$this -> subcomponent = $Router -> subcomponent;
-		$this -> request_body = json_decode(file_get_contents('php://input'), TRUE);
+		$this -> method = $method ? $method : $_SERVER['REQUEST_METHOD'];
+		$this -> component = $component ? $component : $Router -> component;
+		$this -> subcomponent = $subcomponent ? $subcomponent : $Router -> subcomponent;
+		$this -> request_body = $request_body ? $request_body : json_decode(file_get_contents('php://input'), TRUE);
 		
 		$this -> prepareRequest($this -> method, $this -> component, $this -> subcomponent, $this -> request_body);
 		$this -> sendRequest();
 		$this -> getResponse();
+		// vardump($this -> query);
 	}
 
-	private function sendRequest(){
+	public function sendRequest(){
 		global $DB;
 		$this -> response = $DB -> query($this -> query);
 		if ($DB -> errno) {
@@ -38,15 +39,20 @@ class API{
 		}
 	}
 
-	private function getResponse(){
+	public function getResponse(){
 		global $DB;
 		switch ($this -> method) {
 			case 'GET': 
-				$tmparr = [];
+				$tmparr = array();
 				while ($row = $this -> response -> fetch_assoc()) {
 					$tmparr[$row["id"]] = $row;
 				}
-				echo json_encode($tmparr);
+				$this -> response = $tmparr;
+				if( $_POST['password'] ){ 
+					return $this -> response; 
+				} else {
+					echo json_encode($this -> response);
+				}
 				break;
 			case 'POST': $this -> message(200); break;
 			case 'PUT': $this -> message(201); break;
@@ -54,7 +60,8 @@ class API{
 		}
 	}
 
-	private function prepareRequest($method, $component, $subcomponent, $body){
+	public function prepareRequest($method, $component, $subcomponent, $body){
+
 		$q = "";
 
 		// forming ACTION according to METHOD
@@ -68,31 +75,38 @@ class API{
 
 		// forming TABLE according COMPONENT
 		if($component){
-			$q .= "`".$component."` ";
+			$q .= "`".$component."`";
 		} else {
 			$this -> message(400);
 		}
 
-		// forming WHERE according REQUEST_BODY and SUBCOMPONENT
-		if($body && !$subcomponent){
-			switch ($method) {
-				case 'GET': $q .= "WHERE " . $this -> parseRequestBody($body, 'AND'); break;
-				case 'POST': $q .= "SET " . $this -> parseRequestBody($body, ','); break; 
-				case 'PUT': $q .= "SET " . $this -> parseRequestBody($body, ','); break;
-				case 'DELETE': $q .= "WHERE " . $this -> parseRequestBody($body, 'AND'); break;
-			}
-		} elseif (!$body && $subcomponent) {
-			if($method == "GET"){
-				$q .= "WHERE `id`='" . $subcomponent . "'";
-			} else {
-				$this -> message(400);
-			}
-		} else {
-			$this -> message(400);
+		// forming WHERE / SET+WHERE according REQUEST_BODY and SUBCOMPONENT
+		switch ($method) {
+			case 'GET':
+				if ($body && !$subcomponent){ $q .= " WHERE" . $this -> parseRequestBody($body, 'AND'); }
+				elseif (!$body && $subcomponent) { $q .= " WHERE `id`='" . $subcomponent . "'"; }
+				else { $this -> message(400); }	
+				break;
+			case 'POST': 
+				if ($body && $subcomponent && !$body['id']) { 
+					$q .= " SET" . $this -> parseRequestBody($body, ',') . " WHERE `id`='" . $subcomponent . "'"; 
+				} else { $this -> message(400); }
+				break; 
+			case 'PUT': 
+				if ($body && !$subcomponent && !$body['id']){
+					$q .= " SET " . $this -> parseRequestBody($body, ','); 
+				} else { $this -> message(400); }
+				break;
+			case 'DELETE': 
+				if ($body && !$subcomponent){ $q .= " WHERE" . $this -> parseRequestBody($body, 'AND'); }
+				elseif (!$body && $subcomponent){ $q .= " WHERE `id`='" . $subcomponent . "'"; }
+				else { $this -> message(400); }
+				break;
 		}
+
 
 		$this -> query = $q;
-	} 
+	}
 
 	private function message($num){
 		$http = array(
@@ -152,7 +166,7 @@ class API{
 				$tmpstr[$i] = "`".$key."`='".$value."'";
 				$i++;
 			}
-			$string .= implode($separator." ", $tmpstr)." ";
+			$string .= " ".implode(" ".$separator." ", $tmpstr);
 		}
 		return $string;
 	}

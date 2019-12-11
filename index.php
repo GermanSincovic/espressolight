@@ -8,7 +8,7 @@ load_models();
 
 if($Router -> interface == 'api'){
 
-	$API = new API();
+	if( !$_POST['login'] && !$_POST['logout'] ){ $API = new API(); }
 
 } else {
 
@@ -18,6 +18,7 @@ if($Router -> interface == 'api'){
 	if( $_POST['login']  ){ $User ->  login(); }
 	if( $_POST['logout'] ){ $User -> logout(); }
 	if( $User -> role == 'anonimous'){
+		var_dump($_SESSION['a']);
 		include('view/v_login.php');
 	}
 	// 
