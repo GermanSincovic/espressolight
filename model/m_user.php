@@ -9,6 +9,7 @@ class User{
 
 	public function __construct(){
 		$this -> role = "anonimous";
+		$_SESSION["auth"] = $this;
 	}
 
 	public function login(){
@@ -22,8 +23,8 @@ class User{
 			$this -> role = $result[1]['role'];
 			$this -> name = $result[1]['name'];
 			$this -> surname = $result[1]['surname'];
-			$_SESSION["auth"] = $this;
 		}
+		$_SESSION["auth"] = $this;
 	}
 
 	public function logout(){

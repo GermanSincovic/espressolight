@@ -20,9 +20,10 @@ if($Router -> interface == 'api'){
 
 	switch ($_SESSION["auth"] -> role) {
 		case 'anonimous': include('view/v_login.php'); break;
-		case 'master': echo "master"; break;
-		case 'admin': echo "admin"; break;
+		case 'master': var_dump("master"); break;
+		case 'admin': var_dump("admin"); break;
 	}
+	// var_dump($_SESSION);
 }
 
 
