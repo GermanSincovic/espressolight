@@ -85,6 +85,7 @@ class API{
 			case 'GET':
 				if ($body && !$subcomponent){ $q .= " WHERE" . $this -> parseRequestBody($body, 'AND'); }
 				elseif (!$body && $subcomponent) { $q .= " WHERE `id`='" . $subcomponent . "'"; }
+				elseif (!$body && !$subcomponent) { $q .= ""; }
 				else { $this -> message(400); }	
 				break;
 			case 'POST': 

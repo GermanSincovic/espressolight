@@ -1,30 +1,40 @@
 <?
-
 session_start();
-
 require_once("model/config.php");
-
 load_models();
 
 if($Router -> interface == 'api'){
 
-	if( !$_POST['login'] && !$_POST['logout'] ){ $API = new API(); }
+	$API = new API();
 
 } else {
 
-	// USER MODEL
-	// UNDER CONSTRUCTION
-	if( !$User ){ $User = new User(); }
-	if( $_POST['login']  ){ $User ->  login(); }
+	// USER
+	$User = new User();
+
+	if( $_POST['login'] ){ $User -> login(); }
+
+	if ( $_SESSION["auth"]["role"] == 'anonimous' ) {
+
+		require_once('view/v_login.php');
+		
+	} else {
+
+		if ( $Router -> interface == $_SESSION["auth"]["role"] ) {
+			require_once('view/v_main.php');
+		} else {
+			header('Location: '.DOMAIN.$_SESSION["auth"]["role"]);
+		}
+
+	}
+
 	if( $_POST['logout'] ){ $User -> logout(); }
 
-	switch ($_SESSION["auth"] -> role) {
-		case 'anonimous': include('view/v_login.php'); break;
-		case 'master': var_dump("master"); break;
-		case 'admin': var_dump("admin"); break;
-	}
-	// var_dump($_SESSION);
 }
 
+
+	// Eof USER
+
+	// var_dump($_SESSION);
 
 ?>

@@ -1,15 +1,10 @@
 <?
 class User{
 	
-	public $id;
-	public $login;
-	public $role;
-	public $name;
-	public $surname;
-
 	public function __construct(){
-		$this -> role = "anonimous";
-		$_SESSION["auth"] = $this;
+		if(!$_SESSION["auth"]){
+			$_SESSION["auth"]["role"] = "anonimous";
+		}
 	}
 
 	public function login(){
@@ -17,14 +12,12 @@ class User{
 		$tmpArr['password'] = md5($_POST['password']);
 		$tmpObj = new API("GET", "users", false, $tmpArr);
 		$result = $tmpObj -> response;
+		unset($result['password']);
+		unset($result['photo']);
 		if (count($result) == 1) {
-			$this -> id = $result[1]['id'];
-			$this -> login = $result[1]['login'];
-			$this -> role = $result[1]['role'];
-			$this -> name = $result[1]['name'];
-			$this -> surname = $result[1]['surname'];
+			$_SESSION["auth"] = $result[1];
 		}
-		$_SESSION["auth"] = $this;
+		header('Location: '.DOMAIN);
 	}
 
 	public function logout(){
@@ -32,7 +25,7 @@ class User{
 		session_destroy();
 		global $DB;
 		unset($DB);
-		header('Location: /');
+		header('Location: '.DOMAIN);
 	}
 }
 ?>

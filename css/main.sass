@@ -1,0 +1,95 @@
+$font-stack: Roboto, Arial, Courier New
+$body-color: #ececec
+$layer-color: #ffffff
+$secondary-color: #cacaca
+$dark-color: #3a3a3a
+
+body
+	box-sizing: border-box
+	font-family: $font-stack
+
+.shadow
+	box-shadow: 0 0 10px rgba(0,0,0,0.25)
+
+.border-rounded
+	border-radius: 0.5em
+
+body
+	padding: 1em
+	margin: 0
+	display: flex
+	width: 100%
+	flex-direction: column
+	align-items: center
+	background-color: $body-color
+
+nav, section
+	display: flex
+	width: 100%
+	padding: 0.5em
+	flex-direction: row
+	justify-content: space-between
+	align-items: center
+	background-color: $layer-color
+	a
+		font-family: Times
+		display: flex
+		margin: 0 1em
+		justify-content: space-between
+		align-items: center
+		h1
+			margin: 0 1em
+			sub
+				font-family: Copperplate
+				color: $secondary-color
+
+.btn
+	display: flex
+	padding: 1em
+	border: none
+	background-color: transparent
+	font-size: 1em
+	font-weight: 600 
+	color: $secondary-color
+	text-transform: uppercase
+	outline: none
+	&:hover
+		cursor: pointer
+		color: $dark-color
+
+.active
+	color: $dark-color
+
+.hidden
+	display: none
+
+.g-devider
+	width: 100%
+	height: 1em
+
+#nav-controls
+	display: flex
+	flex-direction: row
+	width: 50%
+
+section
+	width: 80%
+	padding: 1em
+
+#spinner
+	display: flex
+	height: 50px
+	width: 50px
+	background-image: url('../img/logo.png')
+	background-size: cover
+	animation: spin 2s linear infinite
+
+@keyframes spin
+	0%
+		transform: rotate(0deg)
+	100%
+		transform: rotate(360deg)
+
+#main
+	table
+		
