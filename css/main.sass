@@ -23,7 +23,7 @@ body
 	align-items: center
 	background-color: $body-color
 
-nav, section
+#navigation, #main
 	display: flex
 	width: 100%
 	padding: 0.5em
@@ -61,7 +61,13 @@ nav, section
 	color: $dark-color
 
 .hidden
-	display: none
+	display: none !important
+
+.show
+	display: flex !important
+
+.blur
+	filter: blur(2px) !important
 
 .g-devider
 	width: 100%
@@ -72,17 +78,33 @@ nav, section
 	flex-direction: row
 	width: 50%
 
-section
+#main
 	width: 80%
 	padding: 1em
 
 #spinner
-	display: flex
-	height: 50px
-	width: 50px
-	background-image: url('../img/logo.png')
-	background-size: cover
-	animation: spin 2s linear infinite
+	display: none
+	flex-direction: column
+	position: absolute
+	height: 100% 
+	width: 100%
+	align-items: center
+	justify-content: center
+	span
+		display: flex
+		align-items: center
+		justify-content: center
+		height: 50px
+		width: 50px
+		&:first-child
+			background-image: url('../img/logo.png')
+			background-size: 50px 50px
+			background-repeat: no-repeat
+			background-position: center
+			animation: spin 2s linear infinite
+		&:last-child
+			font-weight: 700
+
 
 @keyframes spin
 	0%
@@ -90,6 +112,4 @@ section
 	100%
 		transform: rotate(360deg)
 
-#main
-	table
 		
