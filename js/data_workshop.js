@@ -1,20 +1,29 @@
-function DataWorkshop(component){
+function DataWorkshop(method, component, data, callback){
 
+	this.method = method;
 	this.component = component;
+	this.data = data;
 
-	this.getData = function(callback){
+	this.getData = function(){
 		$.ajax({
 	        url: "/api/" + this.component,
-	        type: "GET",
+	        type: this.method,
+	        data: data,
 	        beforeSend: function () {
-	        	$("#main").html("<div id='spinner'></div>");
+				toggleSpinner();
 			},
 			dataType: "json",
 	        success: function(data){
-	        	// $("#main").html("<div id='spinner'></div>");
-	        	callback(data);
+				toggleSpinner();
+				callback(data);
 			} 
 		});
 	}
+
+	switch (this.method){
+		case "GET": this.getData(); break;
+	}
+
+
 }
 
