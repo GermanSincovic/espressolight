@@ -7,25 +7,21 @@ class User{
 		}
 	}
 
-	public function login(){
-		$tmpArr['login'] = $_POST['login'];
-		$tmpArr['password'] = md5($_POST['password']);
-		$tmpObj = new API("GET", "users", false, $tmpArr);
-		$result = $tmpObj -> response;
-		unset($result['password']);
-		unset($result['photo']);
-		if (count($result) == 1) {
-			$_SESSION["auth"] = $result[1];
-		}
-		header('Location: '.DOMAIN);
+	public function isMaster(){
+		return $_SESSION["auth"]["role"] == "master";
 	}
 
-	public function logout(){
-		session_start();
-		session_destroy();
-		global $DB;
-		unset($DB);
-		header('Location: '.DOMAIN);
+	public function isAdmin(){
+		return $_SESSION["auth"]["role"] == "admin";
 	}
+
+	public function isEmployee(){
+		return $_SESSION["auth"]["role"] == "employee";
+	}
+
+	public function isAnonimous(){
+		return $_SESSION["auth"]["role"] == "anonimous";
+	}
+	
 }
 ?>

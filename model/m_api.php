@@ -1,35 +1,30 @@
 <?
-/*
-	Completed API entity
-*/
 class API{
 
 	private $method;
-	private $component;
-	private $subcomponent;
+	private $endpoint;
 	private $request_body;
 
 	private $query;
 	public $response;
 
-	public function __construct($method = false, $component = false, $subcomponent = false, $request_body = false){
-
-		header("Access-Control-Allow-Orgin: *");
-        header("Access-Control-Allow-Methods: *");
-        header("Content-Type: application/json");
-
-		global $Router;
-
-		$this -> method = $method ? $method : $_SERVER['REQUEST_METHOD'];
-		$this -> component = $component ? $component : $Router -> component;
-		$this -> subcomponent = $subcomponent ? $subcomponent : $Router -> subcomponent;
-		$this -> request_body = $request_body ? $request_body : json_decode(file_get_contents('php://input'), TRUE);
-		
-		$this -> prepareRequest($this -> method, $this -> component, $this -> subcomponent, $this -> request_body);
-		$this -> sendRequest();
-		$this -> getResponse();
-		// vardump($this -> query);
-	}
+	private $endpoint_map = [
+		"/api/auth/login" => [
+			"POST" => "login"
+		],
+		"/api/auth/logout" => [
+			"POST" => "logout"
+		],
+		"/api/users" => [
+			"GET" => "getUserList"
+		],
+		"/api/users/{id}" => [
+			"GET" => "getUser",
+			"PUT" => "createUser",
+			"POST" => "updateUser",
+			"DELETE" => "deleteUser"
+		]
+	];
 
 	public function sendRequest(){
 		global $DB;
@@ -170,6 +165,101 @@ class API{
 			$string .= " ".implode(" ".$separator." ", $tmpstr);
 		}
 		return $string;
+	}
+
+	private function getUrlPattern(){
+		$e = $this -> endpoint;
+
+		if($e == "/api/auth/login" || $e == "/api/auth/logout"){ return $e; }
+
+		$e = explode("?", $e)[0];
+		$e = explode("/", $e);
+		if(preg_match("/\D/", $e[3]) > 0){ $this -> message(400); }
+		$ending = preg_match("/^\d+$/", $e[3]) > 0 ? "/{id}" : "" ;
+		return "/".$e[1]."/".$e[2].$ending;
+	}
+
+	private function makeQuery(){
+		switch ($this -> method) {
+			case 'GET':	break; case 'PUT': break; case 'POST': break; case 'DELETE': break;
+			default: $this -> message(405); break;
+		}
+		$m = $this -> endpoint_map[ $this -> getUrlPattern() ][ $this -> method ];
+		call_user_func(array($this, $m));
+	}
+
+	public function __construct(){
+
+		header("Access-Control-Allow-Orgin: *");
+        header("Access-Control-Allow-Methods: *");
+        header("Content-Type: application/json");
+
+		global $Router;
+		$this -> method = $_SERVER['REQUEST_METHOD'];
+		$this -> endpoint = $Router -> url;
+		$this -> request_body = json_decode(file_get_contents('php://input'), TRUE);
+		
+		$this -> makeQuery();
+
+		$this -> sendRequest();
+		$this -> getResponse();
+	}
+
+	private function login(){
+		global $DB;
+		$request_body = $_POST ? $_POST : json_decode(file_get_contents('php://input'), TRUE) ;
+		$tmp = SHA1($request_body["login"]."-".$request_body["password"]).SALT;
+		$this -> response = $DB -> query("SELECT * FROM `users` WHERE `id` IN (SELECT `uid` FROM `auth` WHERE `token`='".$tmp."')");
+		$tmparr = array();
+		while ($row = $this -> response -> fetch_assoc()) {
+			$tmparr = $row;
+		}
+		if($tmparr){
+			$_SESSION['auth'] = $tmparr;
+			$this -> message(200);
+		} else {
+			$this -> message(401);
+		}
+	}
+
+	private function logout(){
+		session_start();
+		session_destroy();
+		global $DB;
+		unset($DB);
+		$this -> message(200);
+	}
+
+	private function getUserList(){
+		global $User;
+		$q = "SELECT * FROM `users` ";
+		if($User -> isAdmin() || $User -> isEmployee()){
+			$q = $q."WHERE `company`='" . $User -> company . "' "; 
+		}
+		if($_GET['limit']){ $q = $q."LIMIT ".$_GET['limit']." ";}
+		if($_GET['offset']){ $q = $q."OFFSET ".$_GET['offset']." ";}
+
+		$this -> query = $q;
+	}
+
+	private function getUser(){
+		global $Router;
+		$q = "SELECT * FROM `users` WHERE `id`='".$Router -> subcomponent."'";
+		var_dump($_SESSION);
+		$this -> query = $q;
+	}
+
+	private function createUser(){
+		$q = "";
+		$this -> query = $q;
+	}
+	private function updateUser(){
+		$q = "";
+		$this -> query = $q;
+	}
+	private function deleteUser(){
+		$q = "";
+		$this -> query = $q;
 	}
 
 }

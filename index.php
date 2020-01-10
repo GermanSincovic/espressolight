@@ -1,7 +1,12 @@
 <?
+
 session_start();
+
 require_once("model/config.php");
+
 load_models();
+	
+$User = new User();
 
 if($Router -> interface == 'api'){
 
@@ -9,12 +14,8 @@ if($Router -> interface == 'api'){
 
 } else {
 
-	// USER
-	$User = new User();
-
-	if( $_POST['login'] ){ $User -> login(); }
-
-	if ( $_SESSION["auth"]["role"] == 'anonimous' ) {
+		// vardump($_SESSION);
+	if ( $User -> isAnonimous() == 'anonimous' ) {
 
 		require_once('view/v_login.php');
 		
@@ -28,13 +29,7 @@ if($Router -> interface == 'api'){
 
 	}
 
-	if( $_POST['logout'] ){ $User -> logout(); }
-
 }
 
-
-	// Eof USER
-
-	// var_dump($_SESSION);
 
 ?>

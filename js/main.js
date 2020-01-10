@@ -1,3 +1,20 @@
+var head_name_arr = {
+	"id": "ID",
+	"name": "Имя",
+	"surname": "Фамилия",
+	"login": "Логин",
+	"password": "Пароль",
+	"email": "E-mail",
+	"role": "Роль",
+	"photo": "Фото",
+	"company": "Компания",
+	"created": "Создан",
+	"active": "Активен",
+	"phone": "Телефон",
+	"owner_id": "Владелец (ID)",
+	"comment": "Комментарий"
+};
+
 function toggleSpinner(){
 	$("#navigation").toggleClass("blur");
 	$("#main").toggleClass("blur");
@@ -21,6 +38,5 @@ $("#nav-controls")[0].addEventListener('click', function(e){
 	window.location.hash = e.target.dataset.route;
 });
 
-window.onload = function(){ switchNavBtn(); showData(); toggleSpinner();}
-window.onhashchange = function(){ switchNavBtn(); showData(); toggleSpinner();}
-
+window.onload = function(){ switchNavBtn(); showData();}
+window.onhashchange = function(){ switchNavBtn(); showData();}

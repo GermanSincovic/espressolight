@@ -1,4 +1,4 @@
-<nav id="navigation" class="navbar navbar-expand-lg navbar-light bg-white shadow rounded-bottom blur">
+<nav id="navigation" class="navbar navbar-expand-lg navbar-light bg-white shadow rounded-bottom">
 	<span class="navbar-brand" href="#">
 		<h3>
 			<img src="<?=DOMAIN;?>/img/logo.png" width="50" height="50" alt="EspressoLIGHT">
@@ -20,8 +20,8 @@
 				<a data-route="other" class="nav-link" href="#other"><h5>Другое</h5></a>
 			</li>
 		</ul>
-		<form action="<?=DOMAIN;?>" method="POST" class="form-inline my-2 my-lg-0">
-			<input class="btn btn-outline-secondary my-2 my-sm-0" type="submit" value="Выход">
+		<form method="POST" class="form-inline my-2 my-lg-0" onsubmit="return false;">
+			<input id="logout" class="btn btn-outline-secondary my-2 my-sm-0" type="submit" value="Выход">
 			<input type="hidden" name="logout" value="1">
 		</form>
 	</div>
