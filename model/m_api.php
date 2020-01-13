@@ -16,15 +16,42 @@ class API{
 			"POST" => "logout"
 		],
 		"/api/users" => [
-			"GET" => "getUserList"
+			"GET" => "getUserList",
+			"PUT" => "createUser"
 		],
 		"/api/users/{id}" => [
 			"GET" => "getUser",
-			"PUT" => "createUser",
 			"POST" => "updateUser",
 			"DELETE" => "deleteUser"
 		]
 	];
+
+	private function applyQueryOffset(){
+		if($_GET['offset']){
+			$this -> query = $this -> query . "OFFSET ".$_GET['offset']." ";
+		}
+	}
+
+	private function applyQueryLimit(){
+		if($_GET['limit']){
+			$this -> query = $this -> query . "LIMIT ".$_GET['limit']." ";
+		}
+	}
+
+	private function applyCompanyLimit($first = false){
+		global $User;
+		if ($first){
+			$this -> query = $this -> query . "WHERE `company`='" . $_SESSION['auth']['company'] . "' ";
+		}
+		else{
+			$this -> query = $this -> query . "AND `company`='" . $_SESSION['auth']['company'] . "' ";
+		}
+	}
+
+	private function isLoggedIn(){
+		global $User;
+		if($User -> isAnonimous()){$this -> message(403);}
+	}
 
 	public function sendRequest(){
 		global $DB;
@@ -153,6 +180,7 @@ class API{
 		die;
 	}
 
+	// DEPRECATED
 	private function parseRequestBody($array, $separator){
 		$string = '';
 		$tmpstr = [];
@@ -205,11 +233,12 @@ class API{
 		$this -> getResponse();
 	}
 
+	// Main methods
 	private function login(){
 		global $DB;
 		$request_body = $_POST ? $_POST : json_decode(file_get_contents('php://input'), TRUE) ;
-		$tmp = SHA1($request_body["login"]."-".$request_body["password"]).SALT;
-		$this -> response = $DB -> query("SELECT * FROM `users` WHERE `id` IN (SELECT `uid` FROM `auth` WHERE `token`='".$tmp."')");
+		$tmp = "SELECT * FROM `users` WHERE `token`='".SHA1($request_body["login"]."-".$request_body["password"]).SALT."'";
+		$this -> response = $DB -> query($tmp);
 		$tmparr = array();
 		while ($row = $this -> response -> fetch_assoc()) {
 			$tmparr = $row;
@@ -232,25 +261,33 @@ class API{
 
 	private function getUserList(){
 		global $User;
-		$q = "SELECT * FROM `users` ";
+		$this -> isLoggedIn();
+		$this -> query = "SELECT * FROM `users` ";
 		if($User -> isAdmin() || $User -> isEmployee()){
-			$q = $q."WHERE `company`='" . $User -> company . "' "; 
+			$this -> applyCompanyLimit(true);
 		}
-		if($_GET['limit']){ $q = $q."LIMIT ".$_GET['limit']." ";}
-		if($_GET['offset']){ $q = $q."OFFSET ".$_GET['offset']." ";}
-
-		$this -> query = $q;
+		$this -> applyQueryLimit();
+		$this -> applyQueryOffset();
 	}
 
 	private function getUser(){
 		global $Router;
-		$q = "SELECT * FROM `users` WHERE `id`='".$Router -> subcomponent."'";
-		var_dump($_SESSION);
-		$this -> query = $q;
+		global $User;
+		$this -> isLoggedIn();
+		$this -> query = "SELECT * FROM `users` ";
+		$this -> query .= "WHERE `id`='".$Router -> subcomponent."' ";
+		if($User -> isAdmin() || $User -> isEmployee()){
+			$this -> applyCompanyLimit();
+		}
 	}
 
 	private function createUser(){
-		$q = "";
+		$q  = "INSERT INTO `users` SET (";
+		$q .= "`name`='".$this -> request_body['name']."',";
+		$q .= "`surname`='".$this -> request_body['surname']."',";
+		$q .= "`role`='".$this -> request_body['role']."',";
+		$q .= "`company`='".$this -> request_body['company']."',";
+		$q .= ")";
 		$this -> query = $q;
 	}
 	private function updateUser(){
