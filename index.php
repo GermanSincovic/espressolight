@@ -6,7 +6,7 @@ require_once("model/config.php");
 
 load_models();
 	
-$User = new User();
+$Auth = new Auth();
 
 if($Router -> interface == 'api'){
 
@@ -15,7 +15,7 @@ if($Router -> interface == 'api'){
 } else {
 
 		// vardump($_SESSION);
-	if ( $User -> isAnonimous() == 'anonimous' ) {
+	if ( $Auth -> isAnonimous() == 'anonimous' ) {
 
 		require_once('view/v_login.php');
 		

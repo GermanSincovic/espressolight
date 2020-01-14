@@ -39,7 +39,7 @@ class API{
 	}
 
 	private function applyCompanyLimit($first = false){
-		global $User;
+		global $Auth;
 		if ($first){
 			$this -> query = $this -> query . "WHERE `company`='" . $_SESSION['auth']['company'] . "' ";
 		}
@@ -49,8 +49,8 @@ class API{
 	}
 
 	private function isLoggedIn(){
-		global $User;
-		if($User -> isAnonimous()){$this -> message(403);}
+		global $Auth;
+		if($Auth -> isAnonimous()){$this -> message(403);}
 	}
 
 	public function sendRequest(){
@@ -260,36 +260,36 @@ class API{
 	}
 
 	private function getUserList(){
-		global $User;
+		global $Auth;
 		$this -> isLoggedIn();
-		$this -> query = "SELECT * FROM `users` ";
-		if($User -> isAdmin() || $User -> isEmployee()){
-			$this -> applyCompanyLimit(true);
-		}
-		$this -> applyQueryLimit();
-		$this -> applyQueryOffset();
+		$users = new USERS();
+		$this -> query = $users->selectAll();
 	}
 
 	private function getUser(){
 		global $Router;
-		global $User;
+		global $Auth;
 		$this -> isLoggedIn();
-		$this -> query = "SELECT * FROM `users` ";
-		$this -> query .= "WHERE `id`='".$Router -> subcomponent."' ";
-		if($User -> isAdmin() || $User -> isEmployee()){
-			$this -> applyCompanyLimit();
-		}
+		$users = new USERS();
+		$this -> query = $users->selectSingle($Router -> subcomponent);
 	}
 
 	private function createUser(){
-		$q  = "INSERT INTO `users` SET (";
-		$q .= "`name`='".$this -> request_body['name']."',";
-		$q .= "`surname`='".$this -> request_body['surname']."',";
-		$q .= "`role`='".$this -> request_body['role']."',";
-		$q .= "`company`='".$this -> request_body['company']."',";
-		$q .= ")";
-		$this -> query = $q;
+		global $Auth;
+		$this -> isLoggedIn();
+		$users = new USERS();
+		$this -> query = $users->insert();
+		// $q  = "INSERT INTO `users` SET (";
+		// $q .= "`name`='"	.$this -> request_body['name']		."',";
+		// $q .= "`surname`='"	.$this -> request_body['surname']	."',";
+		// $q .= "`role`='"	.$this -> request_body['role']		."',";
+		// $q .= "`company`='"	.$this -> request_body['company']	."',";
+		// $q .= "`login`='"	.$this -> request_body['login']		."',";
+		// $q .= "`token`='"	.$this -> request_body['password']	."',";
+		// $q .= ")";
+		// $this -> query = $q;
 	}
+
 	private function updateUser(){
 		$q = "";
 		$this -> query = $q;

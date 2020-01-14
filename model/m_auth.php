@@ -1,5 +1,5 @@
 <?
-class User{
+class Auth{
 	
 	public function __construct(){
 		if(!$_SESSION["auth"]){
