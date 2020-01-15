@@ -4,9 +4,17 @@ session_start();
 
 require_once("model/config.php");
 
-load_models();
-	
+new MODEL_LOADER();
+
 $Auth = new Auth();
+
+$query = new QUERY();
+$query -> setAction('select');
+$query -> setSelector(['a','b','c']);
+$query -> setTable('table');
+vardump($query->assembly());
+
+die();
 
 if($Router -> interface == 'api'){
 

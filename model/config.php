@@ -14,12 +14,20 @@ define("DB_PASS", "admin");
 
 define("SALT", "cf0665bea84");
 
-// loading all classes (all files by mask m_*.php)
-function load_models(){
-	$files = scandir(__DIR__);
-	foreach ($files as $value) {
-		if(preg_match("/^m_(.+).php/i",$value)){
-			require_once($value);
+class MODEL_LOADER{
+	public function __construct(){ $this -> search(__DIR__); }
+	public function search($dir){
+		$list = scandir($dir);
+		array_splice($list , 0, 2);
+		foreach( $list as $value){
+			if( !is_dir($dir."\\".$value) AND $value != 'config.php' ){
+				require_once($dir."\\".$value);
+			}
+		}
+		foreach( $list as $value){
+			if( is_dir($dir."\\".$value) AND $value != 'config.php' ){
+				$this -> search($dir."\\".$value);
+			}
 		}
 	}
 }
