@@ -1,12 +1,33 @@
 <?
 class DB_ENTITY{
 
-	public function selectAll(){
-		$query = "SELECT * FROM `".get_class($this)."`";
-		if ($_SESSION['auth']['company']) {
-			$query .= " WHERE `company`='" . $_SESSION['auth']['company'] . "'";
+		/*
+		$query = new Query();
+		$query -> setAction();
+		$query -> setSelector();
+		$query -> setTable();
+		$query -> setParams();
+		$query -> setWhere();
+		$query -> setOffset();
+		$query -> setLimit();
+		$query -> setSorting();
+		return $query -> assembly();
+		*/
+
+	public function selectList(){
+		global $Auth;
+		$query = new Query();
+		$query -> setAction('SELECT');
+		if($Auth -> getCompanyLimitation()){
+			$query -> setSelector($Auth -> getCompanyLimitation());
 		}
-		return $query;
+		$query -> setTable(get_class($this));
+		$query -> setParams();
+		$query -> setWhere();
+		$query -> setOffset();
+		$query -> setLimit();
+		$query -> setSorting();
+		return $query -> assembly();
 	}
 
 	public function selectSingle($id){

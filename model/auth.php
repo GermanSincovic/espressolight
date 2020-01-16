@@ -22,6 +22,10 @@ class Auth{
 	public function isAnonimous(){
 		return $_SESSION["auth"]["role"] == "anonimous";
 	}
+
+	public function getCompanyLimitation(){
+		return $_SESSION["auth"]["company"];
+	}
 	
 }
 ?>
