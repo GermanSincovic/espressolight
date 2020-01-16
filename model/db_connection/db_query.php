@@ -85,8 +85,8 @@ class QUERY{
 		}
 		switch ($sortingDirection) {
 			case '': break;
-			case ' ASC': $this -> sorting .= $sorting; break;
-			case ' DESC': $this -> sorting .= $sorting; break;
+			case 'ASC': $this -> sorting .= ' '.$sortingDirection; break;
+			case 'DESC': $this -> sorting .= ' '.$sortingDirection; break;
 			default: $this -> error("Wrong Sorting Direction in", __FUNCTION__); break;
 		}
 	}
