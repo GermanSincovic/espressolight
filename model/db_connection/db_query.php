@@ -2,7 +2,7 @@
 class QUERY{
 
 	private $action 	= '';
-	private $selector 	= '*';
+	private $selector 	= '';
 	private $suffix		= '';
 	private $table 		= '';
 	private $params 	= '';
@@ -23,17 +23,14 @@ class QUERY{
 		}
 	}
 
-	public function setSelector($selector = '*'){
-		if($selector == '*'){
-		} elseif($selector AND !is_array($selector)){
-			$this -> selector = '`'.$selector.'`';
-		} elseif($selector AND is_array($selector)){
+	public function setSelector($selector = ''){
+		if($selector AND is_array($selector) AND !empty($selector)){
 			foreach ($selector as $k => $v) {
 				$selector[$k] = '`'.$v.'`';
 			}
 			$this -> selector = implode(',',$selector);
-		} else { 
-			$this -> error("Wrong Selector in", __FUNCTION__);
+		} elseif($this -> action == 'SELECT' OR $this -> action == 'DELETE') {
+			$this -> selector = '*';
 		}
 	}
 
@@ -58,8 +55,12 @@ class QUERY{
 	}
 
 	public function setWhere($where = ''){
+		global $Auth;
+		if($Auth -> getCompanyLimitation()){
+			$where['company'] = $Auth -> getCompanyLimitation();
+		}
+		$tmp = [];
 		if(is_array($where)){
-			$tmp = [];
 			foreach ($where as $key => $value) {
 				$tmp[] = "`".$key."`='".$value."'";
 			}
@@ -83,10 +84,10 @@ class QUERY{
 			}
 			$this -> sorting = 'ORDER BY '.implode(',',$sortingBy);
 		}
-		switch ($sortingDirection) {
+		switch (strtoupper($sortingDirection)) {
 			case '': break;
-			case 'ASC': $this -> sorting .= ' '.$sortingDirection; break;
-			case 'DESC': $this -> sorting .= ' '.$sortingDirection; break;
+			case 'ASC': $this -> sorting .= ' '.strtoupper($sortingDirection); break;
+			case 'DESC': $this -> sorting .= ' '.strtoupper($sortingDirection); break;
 			default: $this -> error("Wrong Sorting Direction in", __FUNCTION__); break;
 		}
 	}

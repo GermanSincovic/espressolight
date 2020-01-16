@@ -4,48 +4,36 @@ class API{
 	private $method;
 	private $endpoint;
 	private $request_body;
-
 	private $query;
+	private $endpoint_map = [];
 	public $response;
 
-	private $endpoint_map = [
-		"/api/auth/login" => [
-			"POST" => "login"
-		],
-		"/api/auth/logout" => [
-			"POST" => "logout"
-		],
-		"/api/users" => [
-			"GET" => "getUserList",
-			"PUT" => "createUser"
-		],
-		"/api/users/{id}" => [
-			"GET" => "getUser",
-			"POST" => "updateUser",
-			"DELETE" => "deleteUser"
-		]
-	];
+	public function __construct(){
 
-	private function applyQueryOffset(){
-		if($_GET['offset']){
-			$this -> query = $this -> query . "OFFSET ".$_GET['offset']." ";
-		}
-	}
+		global $Router;
+		$this -> method = $_SERVER['REQUEST_METHOD'];
+		$this -> endpoint = $Router -> path;
+		$this -> request_body = json_decode(file_get_contents('php://input'), TRUE);
+		
+		$this -> checkMethod();
 
-	private function applyQueryLimit(){
-		if($_GET['limit']){
-			$this -> query = $this -> query . "LIMIT ".$_GET['limit']." ";
-		}
-	}
+		$this -> registerEndpoint("/api/auth/login", "POST", "login");
+		$this -> registerEndpoint("/api/auth/logout", "POST", "logout");
 
-	private function applyCompanyLimit($first = false){
-		global $Auth;
-		if ($first){
-			$this -> query = $this -> query . "WHERE `company`='" . $_SESSION['auth']['company'] . "' ";
-		}
-		else{
-			$this -> query = $this -> query . "AND `company`='" . $_SESSION['auth']['company'] . "' ";
-		}
+		$this -> registerEndpoint("/api/users", "GET", "getUserList");
+		$this -> registerEndpoint("/api/users", "PUT", "createUser");
+		$this -> registerEndpoint("/api/users/{id}", "GET", "getUser");
+		$this -> registerEndpoint("/api/users/{id}", "POST", "updateUser");
+		$this -> registerEndpoint("/api/users/{id}", "DELETE", "deleteUser");
+
+		header("Access-Control-Allow-Orgin: *");
+        header("Access-Control-Allow-Methods: *");
+        header("Content-Type: application/json");
+
+		$this -> executeFunctionByEndpoint( $this -> getUrlPattern() );
+
+		$this -> sendRequest();
+		$this -> getResponse();
 	}
 
 	private function isLoggedIn(){
@@ -53,6 +41,7 @@ class API{
 		if($Auth -> isAnonimous()){$this -> message(403);}
 	}
 
+	// TODO
 	public function sendRequest(){
 		global $DB;
 		$this -> response = $DB -> query($this -> query);
@@ -61,6 +50,7 @@ class API{
 		}
 	}
 
+	// TODO
 	public function getResponse(){
 		global $DB;
 		switch ($this -> method) {
@@ -80,55 +70,6 @@ class API{
 			case 'PUT': $this -> message(201); break;
 			case 'DELETE': $this -> message(200); break;
 		}
-	}
-
-	public function prepareRequest($method, $component, $subcomponent, $body){
-
-		$q = "";
-
-		// forming ACTION according to METHOD
-		switch ($method) {
-			case 'GET': $q = "SELECT * FROM "; break;
-			case 'POST': $q = "UPDATE "; break; 
-			case 'PUT': $q = "INSERT INTO "; break;
-			case 'DELETE': $q = "DELETE FROM "; break;
-			default: $this -> message(405); break;
-		}
-
-		// forming TABLE according COMPONENT
-		if($component){
-			$q .= "`".$component."`";
-		} else {
-			$this -> message(400);
-		}
-
-		// forming WHERE / SET+WHERE according REQUEST_BODY and SUBCOMPONENT
-		switch ($method) {
-			case 'GET':
-				if ($body && !$subcomponent){ $q .= " WHERE" . $this -> parseRequestBody($body, 'AND'); }
-				elseif (!$body && $subcomponent) { $q .= " WHERE `id`='" . $subcomponent . "'"; }
-				elseif (!$body && !$subcomponent) { $q .= ""; }
-				else { $this -> message(400); }	
-				break;
-			case 'POST': 
-				if ($body && $subcomponent && !$body['id']) { 
-					$q .= " SET" . $this -> parseRequestBody($body, ',') . " WHERE `id`='" . $subcomponent . "'"; 
-				} else { $this -> message(400); }
-				break; 
-			case 'PUT': 
-				if ($body && !$subcomponent && !$body['id']){
-					$q .= " SET " . $this -> parseRequestBody($body, ','); 
-				} else { $this -> message(400); }
-				break;
-			case 'DELETE': 
-				if ($body && !$subcomponent){ $q .= " WHERE" . $this -> parseRequestBody($body, 'AND'); }
-				elseif (!$body && $subcomponent){ $q .= " WHERE `id`='" . $subcomponent . "'"; }
-				else { $this -> message(400); }
-				break;
-		}
-
-
-		$this -> query = $q;
 	}
 
 	private function message($num){
@@ -180,7 +121,7 @@ class API{
 		die;
 	}
 
-	// DEPRECATED
+	// TODO
 	private function parseRequestBody($array, $separator){
 		$string = '';
 		$tmpstr = [];
@@ -195,6 +136,7 @@ class API{
 		return $string;
 	}
 
+	// TODO
 	private function getUrlPattern(){
 		$e = $this -> endpoint;
 
@@ -207,31 +149,30 @@ class API{
 		return "/".$e[1]."/".$e[2].$ending;
 	}
 
-	private function makeQuery(){
+	private function checkMethod(){
 		switch ($this -> method) {
 			case 'GET':	break; case 'PUT': break; case 'POST': break; case 'DELETE': break;
 			default: $this -> message(405); break;
 		}
+	}
+
+	private function registerEndpoint($endpoint, $method, $function){
+		$this -> endpoint_map[$endpoint][$method] = $function;
+	}
+
+	private function executeFunctionByEndpoint($endpoint){
 		$m = $this -> endpoint_map[ $this -> getUrlPattern() ][ $this -> method ];
 		call_user_func(array($this, $m));
 	}
 
-	public function __construct(){
 
-		header("Access-Control-Allow-Orgin: *");
-        header("Access-Control-Allow-Methods: *");
-        header("Content-Type: application/json");
+	
 
-		global $Router;
-		$this -> method = $_SERVER['REQUEST_METHOD'];
-		$this -> endpoint = $Router -> url;
-		$this -> request_body = json_decode(file_get_contents('php://input'), TRUE);
-		
-		$this -> makeQuery();
 
-		$this -> sendRequest();
-		$this -> getResponse();
-	}
+
+
+
+
 
 	// Main methods
 	private function login(){
@@ -263,22 +204,22 @@ class API{
 		global $Auth;
 		$this -> isLoggedIn();
 		$users = new USERS();
-		$this -> query = $users->selectAll();
+		$this -> query = $users->get();
 	}
 
 	private function getUser(){
-		global $Router;
-		global $Auth;
-		$this -> isLoggedIn();
-		$users = new USERS();
-		$this -> query = $users->selectSingle($Router -> subcomponent);
+	// 	global $Router;
+	// 	global $Auth;
+	// 	$this -> isLoggedIn();
+	// 	$users = new USERS();
+	// 	$this -> query = $users->selectSingle($Router -> subcomponent);
 	}
 
 	private function createUser(){
-		global $Auth;
-		$this -> isLoggedIn();
-		$users = new USERS();
-		$this -> query = $users->insert();
+	// 	global $Auth;
+	// 	$this -> isLoggedIn();
+	// 	$users = new USERS();
+	// 	$this -> query = $users->insert();
 		// $q  = "INSERT INTO `users` SET (";
 		// $q .= "`name`='"	.$this -> request_body['name']		."',";
 		// $q .= "`surname`='"	.$this -> request_body['surname']	."',";

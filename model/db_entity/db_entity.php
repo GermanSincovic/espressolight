@@ -1,56 +1,44 @@
 <?
 class DB_ENTITY{
 
-		/*
+	private function makeQuery($adds){
 		$query = new Query();
-		$query -> setAction();
-		$query -> setSelector();
-		$query -> setTable();
-		$query -> setParams();
-		$query -> setWhere();
-		$query -> setOffset();
-		$query -> setLimit();
-		$query -> setSorting();
-		return $query -> assembly();
-		*/
-
-	public function selectList(){
-		global $Auth;
-		$query = new Query();
-		$query -> setAction('SELECT');
-		if($Auth -> getCompanyLimitation()){
-			$query -> setSelector($Auth -> getCompanyLimitation());
-		}
-		$query -> setTable(get_class($this));
-		$query -> setParams();
-		$query -> setWhere();
-		$query -> setOffset();
-		$query -> setLimit();
-		$query -> setSorting();
+		$query -> setAction($adds['action']);
+		$query -> setSelector($adds['selector']);
+		$query -> setTable($adds['table']);
+		$query -> setParams($adds['params']);
+		$query -> setWhere($adds['where']);
+		$query -> setOffset($adds['offset']);
+		$query -> setLimit($adds['limit']);
+		$query -> setSorting($adds['sorting']['sorting_by'], $adds['sorting']['sortingDirection']);
 		return $query -> assembly();
 	}
 
-	public function selectSingle($id){
-		$query = "SELECT * FROM `" .get_class($this). "` WHERE `id`='" .$id. "'";
-		if ($_SESSION['auth']['company']) {
-			$query .= " AND `company`='" . $_SESSION['auth']['company'] . "'";
-		}
-		return $query;
+	public function get($adds = []){
+		$adds['action'] = 'SELECT';
+		$adds['table'] = get_class($this);
+		return $this -> makeQuery($adds);
 	}
 
-	public function insert(){
-		$query = "INSERT INTO `users` SET";
-		foreach (array_keys(get_class_vars(get_class($this))) as $key => $value) {
-			var_dump($value);
-		}
+	public function create($adds = []){
+		if( !$adds['params'] ){ $query -> error('Need to provide PARAMS', __FUNCTION__); }
+		$adds['action'] = 'INSERT';
+		$adds['table'] = get_class($this);
+		return $this -> makeQuery($adds);
 	}
 
-	public function update(){
-
+	public function update($adds = []){
+		if( !$adds['params'] OR !$adds['where'] ){ $query -> error('Need to provide PARAMS and WHERE', __FUNCTION__); }
+		$adds['action'] = 'UPDATE';
+		$adds['table'] = get_class($this);
+		return $this -> makeQuery($adds);
 	}
 
-	public function delete(){
-
+	public function delete($adds = []){
+		if( !$adds['where'] ){ $query -> error('Need to provide WHERE', __FUNCTION__); }
+		$adds['action'] = 'DELETE';
+		$adds['table'] = get_class($this);
+		return $this -> makeQuery($adds);
 	}
 }
 ?>

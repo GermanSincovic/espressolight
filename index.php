@@ -6,15 +6,8 @@ require_once("model/config.php");
 
 new MODEL_LOADER();
 
+$Router = new Router();
 $Auth = new Auth();
-
-$query = new QUERY();
-$query -> setAction('select');
-$query -> setSelector(['a','b','c']);
-$query -> setTable('table');
-vardump($query->assembly());
-
-die();
 
 if($Router -> interface == 'api'){
 
@@ -22,8 +15,7 @@ if($Router -> interface == 'api'){
 
 } else {
 
-		// vardump($_SESSION);
-	if ( $Auth -> isAnonimous() == 'anonimous' ) {
+	if ( $Auth -> isAnonimous() ) {
 
 		require_once('view/v_login.php');
 		
