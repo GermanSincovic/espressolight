@@ -32,8 +32,6 @@ class API{
 
 		$this -> executeFunctionByEndpoint( $this -> getUrlPattern() );
 
-		$this -> sendRequest();
-		$this -> getResponse();
 	}
 
 	private function isLoggedIn(){
@@ -42,13 +40,13 @@ class API{
 	}
 
 	// TODO
-	public function sendRequest(){
-		global $DB;
-		$this -> response = $DB -> query($this -> query);
-		if ($DB -> errno) {
-			$this -> message(400);
-		}
-	}
+	// public function sendRequest(){
+	// 	global $DB;
+	// 	$this -> response = $DB -> query($this -> query);
+	// 	if ($DB -> errno) {
+	// 		$this -> message(400);
+	// 	}
+	// }
 
 	// TODO
 	public function getResponse(){
@@ -121,7 +119,6 @@ class API{
 		die;
 	}
 
-	// TODO
 	private function parseRequestBody($array, $separator){
 		$string = '';
 		$tmpstr = [];
@@ -136,7 +133,6 @@ class API{
 		return $string;
 	}
 
-	// TODO
 	private function getUrlPattern(){
 		$e = $this -> endpoint;
 
@@ -204,7 +200,7 @@ class API{
 		global $Auth;
 		$this -> isLoggedIn();
 		$users = new USERS();
-		$this -> query = $users->get();
+		$users->getAll();
 	}
 
 	private function getUser(){

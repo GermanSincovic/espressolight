@@ -7,6 +7,10 @@ class Auth{
 		}
 	}
 
+	public function getRole(){
+		return $_SESSION["auth"]["role"];
+	}
+
 	public function isMaster(){
 		return $_SESSION["auth"]["role"] == "master";
 	}

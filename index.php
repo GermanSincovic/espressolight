@@ -21,10 +21,10 @@ if($Router -> interface == 'api'){
 		
 	} else {
 
-		if ( $Router -> interface == $_SESSION["auth"]["role"] ) {
+		if ( $Router -> interface == $Auth -> getRole() ) {
 			require_once('view/v_main.php');
 		} else {
-			header('Location: '.DOMAIN.$_SESSION["auth"]["role"]);
+			header('Location: '.DOMAIN.$Auth -> getRole());
 		}
 
 	}

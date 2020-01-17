@@ -14,6 +14,13 @@ class DB_ENTITY{
 		return $query -> assembly();
 	}
 
+	
+	/*
+		private function packEntity(){}
+
+		private function getAll(){}
+	*/ 
+
 	public function get($adds = []){
 		$adds['action'] = 'SELECT';
 		$adds['table'] = get_class($this);
