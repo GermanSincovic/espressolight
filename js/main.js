@@ -21,15 +21,11 @@ function toggleSpinner(){
 	$("#spinner").toggleClass("hidden");
 }
 
-function switchNavBtn(){
-	$("#nav-controls > li").removeClass('active');
-	$("[data-route='" + window.location.hash.replace('#', '') + "']").parent().addClass('active');
-}
 
 function showData(){
 	var hComponent = window.location.hash.replace('#', '');
 	if (hComponent) {
-		new DataWorkshop("GET", hComponent, "", TableDrawer);
+		DataWorkshop("GET", hComponent, "", TableDrawer);
 		$("#main").removeClass("hidden");
 	}
 }
@@ -37,6 +33,11 @@ function showData(){
 $("#nav-controls")[0].addEventListener('click', function(e){
 	window.location.hash = e.target.dataset.route;
 });
+
+function switchNavBtn(){
+	$("#nav-controls > li").removeClass('active');
+	$("[data-route='" + window.location.hash.replace('#', '') + "']").parent().addClass('active');
+}
 
 window.onload = function(){ switchNavBtn(); showData();}
 window.onhashchange = function(){ switchNavBtn(); showData();}

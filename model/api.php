@@ -55,44 +55,26 @@ class API{
 		if ($DB -> errno) {
 			$this -> message(400);
 		}
+		if ($DB -> affected_rows == 0) {
+			$this -> message(404);
+		}
 		return $response;
 	}
 	private function message($num){
 		$http = array(
-	        100 => 'Continue',
-	        101 => 'Switching Protocols',
 	        200 => 'OK',
 	        201 => 'Created',
-	        202 => 'Accepted',
-	        203 => 'Non-Authoritative Information',
-	        204 => 'No Content',
-	        205 => 'Reset Content',
-	        206 => 'Partial Content',
-	        300 => 'Multiple Choices',
-	        301 => 'Moved Permanently',
-	        302 => 'Found',
-	        303 => 'See Other',
-	        304 => 'Not Modified',
-	        305 => 'Use Proxy',
-	        307 => 'Temporary Redirect',
 	        400 => 'Bad Request',
 	        401 => 'Unauthorized',
 	        402 => 'Payment Required',
 	        403 => 'Forbidden',
 	        404 => 'Not Found',
 	        405 => 'Method Not Allowed',
-	        406 => 'Not Acceptable',
-	        407 => 'Proxy Authentication Required',
 	        408 => 'Request Time-out',
-	        409 => 'Conflict',
-	        410 => 'Gone',
-	        411 => 'Length Required',
-	        412 => 'Precondition Failed',
 	        413 => 'Request Entity Too Large',
 	        414 => 'Request-URI Too Large',
 	        415 => 'Unsupported Media Type',
 	        416 => 'Requested Range Not Satisfiable',
-	        417 => 'Expectation Failed',
 	        500 => 'Internal Server Error',
 	        501 => 'Not Implemented',
 	        502 => 'Bad Gateway',
@@ -158,9 +140,29 @@ class API{
 		}
 		$this -> request_params_where = $get;
 	}
+	private function convertPasswordToToken(){
+		global $Parser;
+		$l = $this -> request_params_body['login'];
+		$p = $this -> request_params_body['password'];
+		unset($this -> request_params_body['password']);
+		$this -> request_params_body['token'] = $Parser -> makeToken($l, $p);
+	}
 	private function outputResponse(){
-
-		echo json_encode( $this -> response );
+		global $Parser;
+		switch ($this -> method) {
+			case 'GET':
+				echo json_encode( $Parser -> DBResponseToArrayWithId( $this -> response ) );
+				break;
+			case 'POST':
+				$this -> message(200);
+				break;
+			case 'PUT':
+				$this -> message(201);
+				break;
+			case 'DELETE':
+				$this -> message(200);
+				break;
+		}
 	}
 
 
@@ -199,27 +201,40 @@ class API{
 	}
 
 	private function getList($arr = []){
+		global $Router;
 		$this -> query_arr['action'] = 'SELECT';
+		$this -> query_arr['table'] = $Router -> component;
 		$this -> query_arr['selector'] = '*';
 		$this -> query_arr['limit'] = $this -> request_params_limit;
 		$this -> query_arr['offset'] = $this -> request_params_offset;
 		$this -> query_arr['sorting'] = $this -> request_params_sorting;
 	}
 	private function get(){
+		global $Router;
 		$arr['action'] = 'SELECT';
+		$arr['table'] = $Router -> component;
+		$arr['where']['id'] = $Router -> subcomponent;
+		$arr['limit'] = 1;
 		$this -> query_arr = $arr;
 	}
 	private function create(){
+		global $Router;
 		$arr['action'] = 'INSERT';
+		$arr['table'] = $Router -> component;
 		$this -> query_arr = $arr;
 	}
 	private function update(){
+		global $Router;
 		$arr['action'] = 'UPDATE';
+		$arr['table'] = $Router -> component;
+		$arr['where']['id'] = $Router -> subcomponent;
 		$this -> query_arr = $arr;
 	}
 	private function delete(){
+		global $Router;
 		$arr['action'] = 'DELETE';
-		$arr['selector'] = '*';
+		$arr['table'] = $Router -> component;
+		$arr['where']['id'] = $Router -> subcomponent;
 		$this -> query_arr = $arr;
 	}
 
@@ -227,8 +242,37 @@ class API{
 		global $Parser;
 		$this -> getList();
 		$this -> query_arr['where'] = $this -> request_params_where;
-		$this -> query_arr['table'] = 'users';
-		$this -> response = $Parser -> DBResponseToArrayWithId( $this -> sendRequest() );
+		$this -> response = $this -> sendRequest();
+	}
+
+	private function getUser(){
+		global $Parser;
+		$this -> get();
+		$this -> query_arr['where'] = array_merge($this -> query_arr['where'], $this -> request_params_where);
+		$this -> response = $this -> sendRequest();
+	}
+
+	private function createUser(){
+		global $Parser;
+		$this -> create();
+		$this -> convertPasswordToToken();
+		$this -> query_arr['params'] = $this -> request_params_body;
+		$this -> response = $this -> sendRequest();
+	}
+
+	private function updateUser(){
+		$this -> update();
+		unset($this -> request_params_body['login']);
+		unset($this -> request_params_body['token']);
+		$this -> query_arr['params'] = $this -> request_params_body;
+		$this -> response = $this -> sendRequest();
+	}
+
+	private function deleteUser(){
+		global $Parser;
+		$this -> delete();
+		$this -> query_arr['where'] = array_merge($this -> query_arr['where'], $this -> request_params_where);
+		$this -> response = $this -> sendRequest();
 	}
 
 }

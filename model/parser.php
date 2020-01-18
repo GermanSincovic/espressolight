@@ -17,6 +17,14 @@ class PARSER{
 		return $tmparr;
 	}
 
+	public function DBResponseToArraySingle($response){
+		$tmparr = array();
+		while ($row = $response -> fetch_assoc()) {
+			$tmparr = $row;
+		}
+		return $tmparr;
+	}
+
 	public function getEndpointUrlPattern($url){
 		$e = $url;
 

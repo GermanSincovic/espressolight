@@ -29,7 +29,7 @@ class QUERY{
 				$selector[$k] = '`'.$v.'`';
 			}
 			$this -> selector = implode(',',$selector);
-		} elseif($this -> action == 'SELECT' OR $this -> action == 'DELETE') {
+		} elseif($this -> action == 'SELECT') {
 			$this -> selector = '*';
 		}
 	}
@@ -43,14 +43,18 @@ class QUERY{
 	}
 
 	public function setParams($params = ''){
+		global $Auth;
 		if(is_array($params)){
 		    if($params['id']){unset($params['id']);}
+		    if($Auth -> getCompanyLimitation()){
+				$params['company'] = $Auth -> getCompanyLimitation();
+			}
 		    $tmp = [];
     		foreach ($params as $key => $value) {
     			$tmp[] = "`".$key."`='".$value."'";
     		}
     		$tmp = implode(',', $tmp);
-		    $this -> params = 'SET ('.$tmp.')';
+		    $this -> params = 'SET '.$tmp;
 		}
 	}
 
@@ -60,7 +64,7 @@ class QUERY{
 			$where['company'] = $Auth -> getCompanyLimitation();
 		}
 		$tmp = [];
-		if(is_array($where)){
+		if(is_array($where) AND $this -> action != 'INSERT INTO'){
 			foreach ($where as $key => $value) {
 				$tmp[] = "`".$key."`='".$value."'";
 			}

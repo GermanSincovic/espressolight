@@ -1,8 +1,4 @@
-		<script src="../js/jquery.min.js"></script>
-		<script src="../js/popper.min.js"></script>
-		<script src="../js/bootstrap.min.js"></script>
-		<script src="../js/data_workshop.js"></script>
-		<script src="../js/table_drawer.js"></script>
+		<?new JS_MODEL_LOADER();?>
 		<script src="../js/main.js"></script>
 		<script type="text/javascript">
 		$("#logout").on('click', function(){
