@@ -64,20 +64,15 @@ class QUERY{
 			foreach ($where as $key => $value) {
 				$tmp[] = "`".$key."`='".$value."'";
 			}
-			$tmp = implode(',', $tmp);
+			$tmp = implode(' AND ', $tmp);
 			$this -> where = 'WHERE '.$tmp;
 		}
 	}
 
-	public function setOffset($offset = ''){
-		if($offset){ $this -> offset = 'OFFSET '.$offset; }
-	}
-
-	public function setLimit($limit = ''){
-		if($limit){ $this -> limit = 'LIMIT '.$limit; }
-	}
-
 	public function setSorting($sortingBy = '', $sortingDirection = ''){
+		if(!is_array($sortingBy) AND !empty($sortingBy)){
+			$sortingBy = explode(',', $sortingBy);
+		}
 		if(is_array($sortingBy)){
 			foreach ($sortingBy as $k => $v) {
 				$sortingBy[$k] = '`'.$v.'`';
@@ -92,6 +87,14 @@ class QUERY{
 		}
 	}
 
+	public function setLimit($limit = ''){
+		if($limit){ $this -> limit = 'LIMIT '.$limit; }
+	}
+
+	public function setOffset($offset = ''){
+		if($offset){ $this -> offset = 'OFFSET '.$offset; }
+	}
+
 	public function assembly(){
 		array_push($this -> query, $this -> action);
 		array_push($this -> query, $this -> selector);
@@ -99,9 +102,9 @@ class QUERY{
 		array_push($this -> query, $this -> table);
 		array_push($this -> query, $this -> params);
 		array_push($this -> query, $this -> where);
-		array_push($this -> query, $this -> offset);
-		array_push($this -> query, $this -> limit);
 		array_push($this -> query, $this -> sorting);
+		array_push($this -> query, $this -> limit);
+		array_push($this -> query, $this -> offset);
 
 		$this -> query = implode(' ', array_filter($this -> query));
 		return $this -> query;

@@ -6,12 +6,13 @@ require_once("model/config.php");
 
 new MODEL_LOADER();
 
+$Parser = new PARSER();
 $Router = new Router();
 $Auth = new Auth();
 
 if($Router -> interface == 'api'){
 
-	$API = new API();
+	new API();
 
 } else {
 

@@ -3,18 +3,26 @@ class API{
 
 	private $method;
 	private $endpoint;
-	private $request_body;
+	private $request_params_body = [];
+	private $request_params_where = [];
+	private $request_params_limit = [];
+	private $request_params_offset = [];
+	private $request_params_sorting = [];
 	private $query;
+	private $query_arr;
 	private $endpoint_map = [];
 	public $response;
 
 	public function __construct(){
-
+		
 		global $Router;
+		global $Parser;
+
 		$this -> method = $_SERVER['REQUEST_METHOD'];
 		$this -> endpoint = $Router -> path;
-		$this -> request_body = json_decode(file_get_contents('php://input'), TRUE);
+		$this -> endpoint_pattern = $Parser -> getEndpointUrlPattern( $this -> endpoint );
 		
+		$this -> prepareRequestParamsArray();
 		$this -> checkMethod();
 
 		$this -> registerEndpoint("/api/auth/login", "POST", "login");
@@ -30,46 +38,25 @@ class API{
         header("Access-Control-Allow-Methods: *");
         header("Content-Type: application/json");
 
-		$this -> executeFunctionByEndpoint( $this -> getUrlPattern() );
-
+		$this -> executeFunctionByEndpoint( $this -> endpoint_pattern );
+		// SMALL or BIG chain of actions!!! 
+		$this -> outputResponse();
 	}
 
 	private function isLoggedIn(){
 		global $Auth;
-		if($Auth -> isAnonimous()){$this -> message(403);}
-	}
-
-	// TODO
-	// public function sendRequest(){
-	// 	global $DB;
-	// 	$this -> response = $DB -> query($this -> query);
-	// 	if ($DB -> errno) {
-	// 		$this -> message(400);
-	// 	}
-	// }
-
-	// TODO
-	public function getResponse(){
-		global $DB;
-		switch ($this -> method) {
-			case 'GET': 
-				$tmparr = array();
-				while ($row = $this -> response -> fetch_assoc()) {
-					$tmparr[$row["id"]] = $row;
-				}
-				$this -> response = $tmparr;
-				if( $_POST['password'] ){ 
-					return $this -> response; 
-				} else {
-					echo json_encode($this -> response);
-				}
-				break;
-			case 'POST': $this -> message(200); break;
-			case 'PUT': $this -> message(201); break;
-			case 'DELETE': $this -> message(200); break;
+		if($Auth -> isAnonimous()){
+			$this -> message(403);
 		}
 	}
-
+	private function sendRequest(){
+		global $DB;
+		$response = $DB -> query( $this -> makeQuery());
+		if ($DB -> errno) {
+			$this -> message(400);
+		}
+		return $response;
+	}
 	private function message($num){
 		$http = array(
 	        100 => 'Continue',
@@ -118,47 +105,62 @@ class API{
 		echo json_encode([ "status" => $http[$num] ]);
 		die;
 	}
-
-	private function parseRequestBody($array, $separator){
-		$string = '';
-		$tmpstr = [];
-		$i = 0;
-		if($array && is_array($array)){
-			foreach ($array as $key => $value) {
-				$tmpstr[$i] = "`".$key."`='".$value."'";
-				$i++;
-			}
-			$string .= " ".implode(" ".$separator." ", $tmpstr);
-		}
-		return $string;
+	private function makeQuery(){
+		$adds = $this -> query_arr;
+		$query = new Query();
+		$query -> setAction($adds['action']);
+		$query -> setSelector($adds['selector']);
+		$query -> setTable($adds['table']);
+		$query -> setParams($adds['params']);
+		$query -> setWhere($adds['where']);
+		$query -> setSorting($adds['sorting']['sortingBy'], $adds['sorting']['sortingDirection']);
+		$query -> setLimit($adds['limit']);
+		$query -> setOffset($adds['offset']);
+		$this -> query_arr = [];
+		return $query -> assembly();
 	}
-
-	private function getUrlPattern(){
-		$e = $this -> endpoint;
-
-		if($e == "/api/auth/login" || $e == "/api/auth/logout"){ return $e; }
-
-		$e = explode("?", $e)[0];
-		$e = explode("/", $e);
-		if(preg_match("/\D/", $e[3]) > 0){ $this -> message(400); }
-		$ending = preg_match("/^\d+$/", $e[3]) > 0 ? "/{id}" : "" ;
-		return "/".$e[1]."/".$e[2].$ending;
-	}
-
 	private function checkMethod(){
 		switch ($this -> method) {
-			case 'GET':	break; case 'PUT': break; case 'POST': break; case 'DELETE': break;
+			case 'GET':	break;
+			case 'PUT': break;
+			case 'POST': break;
+			case 'DELETE': break;
 			default: $this -> message(405); break;
 		}
 	}
-
 	private function registerEndpoint($endpoint, $method, $function){
+		
 		$this -> endpoint_map[$endpoint][$method] = $function;
 	}
-
 	private function executeFunctionByEndpoint($endpoint){
-		$m = $this -> endpoint_map[ $this -> getUrlPattern() ][ $this -> method ];
-		call_user_func(array($this, $m));
+
+		call_user_func(array($this, $this -> endpoint_map[ $this -> endpoint_pattern ][ $this -> method ]));
+	}
+	private function prepareRequestParamsArray(){
+		$this -> request_params_body = $_POST ? $_POST : json_decode(file_get_contents('php://input'), TRUE);
+		$get = $_GET;
+		unset($get['url']);
+		if($get['limit'] !== null) { 
+			$this -> request_params_limit = $get['limit'];
+			unset($get['limit']);
+		}
+		if($get['offset'] !== null) { 
+			$this -> request_params_offset = $get['offset'];
+			unset($get['offset']);
+		}
+		if($get['sortingBy']) { 
+			$this -> request_params_sorting['sortingBy'] = $get['sortingBy'];
+			unset($get['sortingBy']);
+		}
+		if($get['sortingDirection']) { 
+			$this -> request_params_sorting['sortingDirection'] = $get['sortingDirection'];
+			unset($get['sortingDirection']);
+		}
+		$this -> request_params_where = $get;
+	}
+	private function outputResponse(){
+
+		echo json_encode( $this -> response );
 	}
 
 
@@ -196,44 +198,37 @@ class API{
 		$this -> message(200);
 	}
 
+	private function getList($arr = []){
+		$this -> query_arr['action'] = 'SELECT';
+		$this -> query_arr['selector'] = '*';
+		$this -> query_arr['limit'] = $this -> request_params_limit;
+		$this -> query_arr['offset'] = $this -> request_params_offset;
+		$this -> query_arr['sorting'] = $this -> request_params_sorting;
+	}
+	private function get(){
+		$arr['action'] = 'SELECT';
+		$this -> query_arr = $arr;
+	}
+	private function create(){
+		$arr['action'] = 'INSERT';
+		$this -> query_arr = $arr;
+	}
+	private function update(){
+		$arr['action'] = 'UPDATE';
+		$this -> query_arr = $arr;
+	}
+	private function delete(){
+		$arr['action'] = 'DELETE';
+		$arr['selector'] = '*';
+		$this -> query_arr = $arr;
+	}
+
 	private function getUserList(){
-		global $Auth;
-		$this -> isLoggedIn();
-		$users = new USERS();
-		$users->getAll();
-	}
-
-	private function getUser(){
-	// 	global $Router;
-	// 	global $Auth;
-	// 	$this -> isLoggedIn();
-	// 	$users = new USERS();
-	// 	$this -> query = $users->selectSingle($Router -> subcomponent);
-	}
-
-	private function createUser(){
-	// 	global $Auth;
-	// 	$this -> isLoggedIn();
-	// 	$users = new USERS();
-	// 	$this -> query = $users->insert();
-		// $q  = "INSERT INTO `users` SET (";
-		// $q .= "`name`='"	.$this -> request_body['name']		."',";
-		// $q .= "`surname`='"	.$this -> request_body['surname']	."',";
-		// $q .= "`role`='"	.$this -> request_body['role']		."',";
-		// $q .= "`company`='"	.$this -> request_body['company']	."',";
-		// $q .= "`login`='"	.$this -> request_body['login']		."',";
-		// $q .= "`token`='"	.$this -> request_body['password']	."',";
-		// $q .= ")";
-		// $this -> query = $q;
-	}
-
-	private function updateUser(){
-		$q = "";
-		$this -> query = $q;
-	}
-	private function deleteUser(){
-		$q = "";
-		$this -> query = $q;
+		global $Parser;
+		$this -> getList();
+		$this -> query_arr['where'] = $this -> request_params_where;
+		$this -> query_arr['table'] = 'users';
+		$this -> response = $Parser -> DBResponseToArrayWithId( $this -> sendRequest() );
 	}
 
 }
