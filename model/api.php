@@ -165,42 +165,7 @@ class API{
 		}
 	}
 
-
-	
-
-
-
-
-
-
-
-	// Main methods
-	private function login(){
-		global $DB;
-		$request_body = $_POST ? $_POST : json_decode(file_get_contents('php://input'), TRUE) ;
-		$tmp = "SELECT * FROM `users` WHERE `token`='".SHA1($request_body["login"]."-".$request_body["password"]).SALT."'";
-		$this -> response = $DB -> query($tmp);
-		$tmparr = array();
-		while ($row = $this -> response -> fetch_assoc()) {
-			$tmparr = $row;
-		}
-		if($tmparr){
-			$_SESSION['auth'] = $tmparr;
-			$this -> message(200);
-		} else {
-			$this -> message(401);
-		}
-	}
-
-	private function logout(){
-		session_start();
-		session_destroy();
-		global $DB;
-		unset($DB);
-		$this -> message(200);
-	}
-
-	private function getList($arr = []){
+	private function getList(){
 		global $Router;
 		$this -> query_arr['action'] = 'SELECT';
 		$this -> query_arr['table'] = $Router -> component;
@@ -238,20 +203,46 @@ class API{
 		$this -> query_arr = $arr;
 	}
 
+	// Main methods
+	private function login(){
+		global $DB;
+		global $Parser;
+
+		$this -> convertPasswordToToken();
+
+		$this -> query_arr = [];
+		$this -> query_arr['action'] = 'SELECT';
+		$this -> query_arr['selector'] = '*';
+		$this -> query_arr['table'] = 'users';
+		$this -> query_arr['where']['token'] = $this -> request_params_body['token'];
+		$this -> response = $this -> sendRequest();
+		if ($this -> response -> num_rows == 1){
+			$_SESSION['auth'] = $Parser -> DBResponseToArraySingle($this -> response);
+			$this -> message(200);
+		} else {
+			$this -> message(401);
+		}
+	}
+	private function logout(){
+		session_start();
+		session_destroy();
+		global $DB;
+		unset($DB);
+		$this -> message(200);
+	}
+
 	private function getUserList(){
 		global $Parser;
 		$this -> getList();
 		$this -> query_arr['where'] = $this -> request_params_where;
 		$this -> response = $this -> sendRequest();
 	}
-
 	private function getUser(){
 		global $Parser;
 		$this -> get();
 		$this -> query_arr['where'] = array_merge($this -> query_arr['where'], $this -> request_params_where);
 		$this -> response = $this -> sendRequest();
 	}
-
 	private function createUser(){
 		global $Parser;
 		$this -> create();
@@ -259,7 +250,6 @@ class API{
 		$this -> query_arr['params'] = $this -> request_params_body;
 		$this -> response = $this -> sendRequest();
 	}
-
 	private function updateUser(){
 		$this -> update();
 		unset($this -> request_params_body['login']);
@@ -267,7 +257,6 @@ class API{
 		$this -> query_arr['params'] = $this -> request_params_body;
 		$this -> response = $this -> sendRequest();
 	}
-
 	private function deleteUser(){
 		global $Parser;
 		$this -> delete();
