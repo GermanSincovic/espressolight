@@ -1,3 +1,2 @@
-rem "%ProgramFiles%\Git\git-bash.exe"
-git add .
-pause
+set /p message=Commit message:
+git add . && git commit -m "%message%" && git push origin master
