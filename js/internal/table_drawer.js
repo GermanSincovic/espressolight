@@ -1,5 +1,6 @@
 function TableDrawer(data){
 
+		console.log(Object.keys(data).length);
 	if (Object.keys(data).length > 0){
 
 		var table = document.createElement('table');
@@ -9,12 +10,12 @@ function TableDrawer(data){
 		var thead_row = thead.insertRow();
 
 		for(var key in data[Object.keys(data)[0]]){
-			if(key == "password" || key == "photo"){ continue; }
 			var thead_cell = thead_row.appendChild(document.createElement("th"));
 				thead_cell.setAttribute("scope","col");
 				thead_cell.dataset.name = key;
 				thead_cell.innerText = head_name_arr[key];
 		}
+
 			var thead_cell = thead_row.appendChild(document.createElement("th"));
 				thead_cell.setAttribute("scope","col");
 			var edit_btn = document.createElement('button');
@@ -31,7 +32,6 @@ function TableDrawer(data){
 			var tbody_row = tbody.insertRow();
 			
 			for(var inner_key in data[key]){
-				if(inner_key == "password" || inner_key == "photo"){ continue; }
 				var tbody_cell = tbody_row.insertCell();
 				tbody_cell.dataset.name = inner_key;
 				tbody_cell.innerText = data[key][inner_key];
@@ -56,6 +56,7 @@ function TableDrawer(data){
 				tbody_cell.appendChild(edit_btn);
 
 		}
+
 
 		$("#main").html(table);
 

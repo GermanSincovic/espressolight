@@ -93,6 +93,7 @@ class API{
 		$query -> setAction($adds['action']);
 		$query -> setSelector($adds['selector']);
 		$query -> setTable($adds['table']);
+		$query -> setJoin($adds['join']);
 		$query -> setParams($adds['params']);
 		$query -> setWhere($adds['where']);
 		$query -> setSorting($adds['sorting']['sortingBy'], $adds['sorting']['sortingDirection']);
@@ -151,7 +152,7 @@ class API{
 		global $Parser;
 		switch ($this -> method) {
 			case 'GET':
-				echo json_encode( $Parser -> DBResponseToArrayWithId( $this -> response ) );
+				echo json_encode( $Parser -> DBResponseToArray( $this -> response ) );
 				break;
 			case 'POST':
 				$this -> message(200);
@@ -232,9 +233,10 @@ class API{
 	}
 
 	private function getUserList(){
-		global $Parser;
 		$this -> getList();
+		$this -> query_arr['selector'] = ['users.id', 'users.name', 'users.surname', 'users.role', 'users.cid', 'companies.name AS cname'];
 		$this -> query_arr['where'] = $this -> request_params_where;
+		$this -> query_arr['join'] = 'INNER JOIN (SELECT id, name FROM companies) AS companies ON companies.id=users.cid';
 		$this -> response = $this -> sendRequest();
 	}
 	private function getUser(){

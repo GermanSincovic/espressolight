@@ -11,7 +11,10 @@ var head_name_arr = {
 	"created": "Создан",
 	"active": "Активен",
 	"phone": "Телефон",
-	"owner_id": "Владелец (ID)",
+	"token": "Токен",
+	"cid": "Компания (ID)",
+	"cname": "Компания",
+	"uid": "Владелец (ID)",
 	"comment": "Комментарий"
 };
 

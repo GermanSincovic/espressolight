@@ -5,6 +5,7 @@ class QUERY{
 	private $selector 	= '';
 	private $suffix		= '';
 	private $table 		= '';
+	private $join 		= '';
 	private $params 	= '';
 	private $where 		= '';
 	private $offset 	= '';
@@ -26,7 +27,7 @@ class QUERY{
 	public function setSelector($selector = ''){
 		if($selector AND is_array($selector) AND !empty($selector)){
 			foreach ($selector as $k => $v) {
-				$selector[$k] = '`'.$v.'`';
+				$selector[$k] = ''.$v.'';
 			}
 			$this -> selector = implode(',',$selector);
 		} elseif($this -> action == 'SELECT') {
@@ -42,12 +43,18 @@ class QUERY{
 		}
 	}
 
+	public function setJoin($join = ''){
+		if($join AND $this -> action == 'SELECT'){
+			$this -> join = $join;
+		}
+	}
+
 	public function setParams($params = ''){
 		global $Auth;
 		if(is_array($params)){
 		    if($params['id']){unset($params['id']);}
 		    if($Auth -> getCompanyLimitation()){
-				$params['company'] = $Auth -> getCompanyLimitation();
+				$params['cid'] = $Auth -> getCompanyLimitation();
 			}
 		    $tmp = [];
     		foreach ($params as $key => $value) {
@@ -61,10 +68,10 @@ class QUERY{
 	public function setWhere($where = ''){
 		global $Auth;
 		if($Auth -> getCompanyLimitation()){
-			$where['company'] = $Auth -> getCompanyLimitation();
+			$where['cid'] = $Auth -> getCompanyLimitation();
 		}
 		$tmp = [];
-		if(is_array($where) AND $this -> action != 'INSERT INTO'){
+		if(is_array($where) AND $where AND $this -> action != 'INSERT INTO'){
 			foreach ($where as $key => $value) {
 				$tmp[] = "`".$key."`='".$value."'";
 			}
@@ -104,6 +111,7 @@ class QUERY{
 		array_push($this -> query, $this -> selector);
 		array_push($this -> query, $this -> suffix);
 		array_push($this -> query, $this -> table);
+		array_push($this -> query, $this -> join);
 		array_push($this -> query, $this -> params);
 		array_push($this -> query, $this -> where);
 		array_push($this -> query, $this -> sorting);

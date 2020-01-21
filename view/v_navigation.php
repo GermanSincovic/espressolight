@@ -20,6 +20,9 @@
 				<a data-route="other" class="nav-link" href="#other"><h5>Другое</h5></a>
 			</li>
 		</ul>
+		<div class="px-3 text-muted">
+		<? echo $_SESSION['auth']['name'].' '.$_SESSION['auth']['surname']; ?>
+		</div>
 		<form method="POST" class="form-inline my-2 my-lg-0" onsubmit="return false;">
 			<input id="logout" class="btn btn-outline-secondary my-2 my-sm-0" type="submit" value="Выход">
 			<input type="hidden" name="logout" value="1">
