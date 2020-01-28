@@ -21,11 +21,15 @@ if($Router -> interface == 'api'){
 		require_once('view/v_login.php');
 		
 	} else {
-		// debug($_SESSION);
-		if ( $Router -> interface == $Auth -> getRole() ) {
-			require_once('view/v_main.php');
-		} else {
+
+		if ( $Router -> interface != $Auth -> getRole() ) {
+
 			header('Location: '.DOMAIN.$Auth -> getRole());
+
+		} else {
+
+			require_once('view/v_main.php');
+			
 		}
 
 	}

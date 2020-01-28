@@ -30,6 +30,14 @@ class Auth{
 	public function getCompanyLimitation(){
 		return $_SESSION["auth"]["company"];
 	}
+
+	public function getName(){
+		return (!$this -> isAnonimous()) ? $_SESSION['auth']['name'].' '.$_SESSION['auth']['surname'] : '' ;
+	}
+
+	public function getId(){
+		return (!$this -> isAnonimous()) ? $_SESSION['auth']['id'] : null ;
+	}
 	
 }
 ?>

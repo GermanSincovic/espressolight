@@ -1,6 +1,5 @@
 function TableDrawer(data){
 
-		console.log(Object.keys(data).length);
 	if (Object.keys(data).length > 0){
 
 		var table = document.createElement('table');

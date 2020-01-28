@@ -24,7 +24,6 @@ function toggleSpinner(){
 	$("#spinner").toggleClass("hidden");
 }
 
-
 function showData(){
 	var hComponent = window.location.hash.replace('#', '');
 	if (hComponent) {
