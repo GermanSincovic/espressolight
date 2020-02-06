@@ -4,7 +4,7 @@ global $mysqli;
 
 define("DOMAIN", "http://espressolight.loc/");
 
-define("DB_HOST", "localhost");
+define("DB_HOST", "192.168.0.102");
 
 define("DB_NAME", "espresso");
 
@@ -15,7 +15,9 @@ define("DB_PASS", "admin");
 define("SALT", "cf0665bea84");
 
 class MODEL_LOADER{
-	public function __construct(){ $this -> search(__DIR__); }
+	public function __construct(){
+		$this -> search(__DIR__);
+	}
 	public function search($dir){
 		$list = scandir($dir);
 		array_splice($list , 0, 2);

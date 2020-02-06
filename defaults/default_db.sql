@@ -1,17 +1,3 @@
--- --------------------------------------------------------
--- Хост:                         127.0.0.1
--- Версия сервера:               10.3.13-MariaDB-log - mariadb.org binary distribution
--- Операционная система:         Win64
--- HeidiSQL Версия:              10.2.0.5599
--- --------------------------------------------------------
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-
--- Дамп структуры для таблица espresso.companies
 CREATE TABLE IF NOT EXISTS `companies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -24,9 +10,6 @@ CREATE TABLE IF NOT EXISTS `companies` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Экспортируемые данные не выделены.
-
--- Дамп структуры для таблица espresso.contragents
 CREATE TABLE IF NOT EXISTS `contragents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -35,9 +18,6 @@ CREATE TABLE IF NOT EXISTS `contragents` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Экспортируемые данные не выделены.
-
--- Дамп структуры для таблица espresso.expenses
 CREATE TABLE IF NOT EXISTS `expenses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nid` int(11) NOT NULL,
@@ -46,9 +26,6 @@ CREATE TABLE IF NOT EXISTS `expenses` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Экспортируемые данные не выделены.
-
--- Дамп структуры для таблица espresso.incoming
 CREATE TABLE IF NOT EXISTS `incoming` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -63,9 +40,6 @@ CREATE TABLE IF NOT EXISTS `incoming` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Экспортируемые данные не выделены.
-
--- Дамп структуры для таблица espresso.nomenclature
 CREATE TABLE IF NOT EXISTS `nomenclature` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -76,9 +50,6 @@ CREATE TABLE IF NOT EXISTS `nomenclature` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Экспортируемые данные не выделены.
-
--- Дамп структуры для таблица espresso.pricing
 CREATE TABLE IF NOT EXISTS `pricing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -89,9 +60,6 @@ CREATE TABLE IF NOT EXISTS `pricing` (
   KEY `nid` (`nid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
--- Экспортируемые данные не выделены.
-
--- Дамп структуры для таблица espresso.recipes
 CREATE TABLE IF NOT EXISTS `recipes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -101,9 +69,6 @@ CREATE TABLE IF NOT EXISTS `recipes` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Экспортируемые данные не выделены.
-
--- Дамп структуры для таблица espresso.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL DEFAULT '',
@@ -116,8 +81,4 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `token` (`token`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
--- Экспортируемые данные не выделены.
-
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+INSERT INTO `users` SET `name`='admin', `surname`='admin', `role`='master', `company`='', `login`='admin', `token`='fe613c9795fc44c247558d276a557b486c85d25b';

@@ -7,12 +7,10 @@ function DataWorkshop(method, component, data, callback){
 			toggleSpinner();
 		},
 		dataType: "json",
-		// error: function(data, status) {
-	 //        console.log('Error: data -> ' + data + ' :: status -> ' + status);
-	 //    },
         success: function(data){
-			callback(data);
-			// console.log(data);
+			// callback(data);
+			console.log(data[0]);
+			$("#main")[0].innerText = data[0];
 		},
 		complete: function(){
 			toggleSpinner();

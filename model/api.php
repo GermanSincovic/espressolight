@@ -234,9 +234,7 @@ class API{
 
 	private function getUserList(){
 		$this -> getList();
-		$this -> query_arr['selector'] = ['users.id', 'users.name', 'users.surname', 'users.role', 'users.cid', 'companies.name AS cname'];
 		$this -> query_arr['where'] = $this -> request_params_where;
-		$this -> query_arr['join'] = 'INNER JOIN (SELECT id, name FROM companies) AS companies ON companies.id=users.cid';
 		$this -> response = $this -> sendRequest();
 	}
 	private function getUser(){
