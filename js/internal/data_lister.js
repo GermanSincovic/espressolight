@@ -4,13 +4,10 @@ function DataLister(data, target){
 	this.wrapper.className = "list-group";
 
 	this.addLine = function(text, link){
-		// var el = document.createElement('li');
-		// 	el.className = "list-group-item";
 		var a = document.createElement('a');
 			a.className = "list-group-item list-group-item-action";
 			a.href = link;
 			a.innerText = text;
-			// el.append(a);
 			this.wrapper.append(a);
 	}
 

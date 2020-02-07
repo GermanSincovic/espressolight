@@ -21,9 +21,9 @@
 		</div>
 
 
-		<script src="<?=DOMAIN;?>js/external/jquery.min.js"></script>
-		<script src="<?=DOMAIN;?>js/external/secondary/popper.min.js"></script>
-		<script src="<?=DOMAIN;?>js/external/secondary/bootstrap.min.js"></script>
+		<script src="../js/external/jquery.min.js"></script>
+		<script src="../js/external/secondary/popper.min.js"></script>
+		<script src="../js/external/secondary/bootstrap.min.js"></script>
 		<script type="text/javascript">
 			function login_failed_message(){
 				if($("#login_failed_message")[0] == undefined){
@@ -33,7 +33,7 @@
 
 			$("#login_btn").on("click", function() {
 				$.ajax({
-		            url: "<?=DOMAIN;?>api/auth/login",
+		            url: "/api/auth/login",
 		            type: "POST",
 		            data: {
 		            	"login": $("#login")[0].value,
