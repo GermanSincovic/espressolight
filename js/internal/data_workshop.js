@@ -8,9 +8,7 @@ function DataWorkshop(method, component, data, callback){
 		},
 		dataType: "json",
         success: function(data){
-			callback(data);
-			// console.log(data[0]);
-			// $("#main")[0].innerText = data[0];
+			callback(data, $("#main"));
 		},
 		complete: function(){
 			toggleSpinner();

@@ -27,7 +27,7 @@ function toggleSpinner(){
 function showData(){
 	var hComponent = window.location.hash.replace('#', '');
 	if (hComponent) {
-		DataWorkshop("GET", hComponent, "", TableDrawer);
+		DataWorkshop("GET", hComponent, "", DataLister);
 		$("#main").removeClass("hidden");
 	}
 }

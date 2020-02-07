@@ -1,4 +1,4 @@
-function TableDrawer(data){
+function TableDrawer(data, target){
 
 	if (Object.keys(data).length > 0){
 
@@ -57,11 +57,11 @@ function TableDrawer(data){
 		}
 
 
-		$("#main").html(table);
+		target.html(table);
 
 	} else {
 
-		$("#main").html(`<div class="d-flex justify-content-between"><span>Записей нет</span><button data-id="new" class="badge btn btn-success my-2 my-sm-0">New</button></div>`);
+		target.html(`<div class="d-flex justify-content-between"><span>Записей нет</span><button data-id="new" class="badge btn btn-success my-2 my-sm-0">New</button></div>`);
 
 	}
 }
