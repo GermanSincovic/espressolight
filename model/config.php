@@ -2,7 +2,8 @@
 
 global $mysqli;
 
-define("DOMAIN", "http://espressolight.loc/");
+define("DOMAIN", "http://".$_SERVER['HTTP_HOST']."/");
+// vardump($_SERVER);
 
 define("DB_HOST", "192.168.0.102");
 
