@@ -7,7 +7,7 @@ function DataLister(data, target){
 		var el = document.createElement('li');
 			el.className = "list-group-item";
 		var a = document.createElement('a');
-			a.className = "list-group-item";
+			a.className = "list-group-item list-group-item-action";
 			a.href = link;
 			a.innerText = text;
 			el.append(a);
@@ -16,7 +16,7 @@ function DataLister(data, target){
 
 	if(data.length > 0){
 		for (var key in data){
-			this.addLine(data[key].name + data[key].surname, window.location.href + "/" + data[key].id);
+			this.addLine(data[key].name + ' ' + data[key].surname, window.location.href + "/" + data[key].id);
 		}
 		target.append(this.wrapper);
 	} else {
