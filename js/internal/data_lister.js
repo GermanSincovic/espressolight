@@ -18,9 +18,9 @@ function DataLister(data, target){
 		for (var key in data){
 			this.addLine(data[key].name + ' ' + data[key].surname, window.location.href + "/" + data[key].id);
 		}
-		target.append(this.wrapper);
+		target.html(this.wrapper);
 	} else {
-		target.append("<span>Нечего показать...</span>");
+		target.html("<span>Нечего показать...</span>");
 	}
 
 	
