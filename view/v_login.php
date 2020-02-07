@@ -41,7 +41,7 @@
 		            },
 		    		dataType: "json",
 		            success: function(){
-						window.location.href = "<?=DOMAIN;?>";
+						window.location.href = "/";
 					},
 					error: function(){
 						login_failed_message();

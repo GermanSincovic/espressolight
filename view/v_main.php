@@ -42,11 +42,11 @@
 		</section>
 		<div id="spinner" class="hidden"><span></span><span>ЗАГРУЗКА...</span></div>
 		<?new JS_MODEL_LOADER();?>
-		<script src="<?=DOMAIN;?>js/main.js"></script>
+		<script src="../js/main.js"></script>
 		<script type="text/javascript">
 			$("#logout").on('click', function(){
 				$.ajax({
-		            url: "<?=DOMAIN;?>api/auth/logout",
+		            url: "/api/auth/logout",
 		            type: "POST",
 		    		dataType: "json",
 		            success: function(){
