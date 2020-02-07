@@ -9,7 +9,7 @@ function DataLister(data, target){
 		var a = document.createElement('a');
 			a.className = "list-group-item";
 			a.href = link;
-			a.value = text;
+			a.innerText = text;
 			el.append(a);
 			this.wrapper.append(el);
 	}
