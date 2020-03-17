@@ -6,7 +6,7 @@ require_once("model/config.php");
 
 new MODEL_LOADER();
 
-$Parser = new PARSER();
+$Parser = new Parser();
 $Router = new Router();
 $Auth = new Auth();
 
