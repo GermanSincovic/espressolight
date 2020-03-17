@@ -1,5 +1,5 @@
 <?
-class PARSER{
+class Parser{
 	
 	public function DBResponseToArray($response){
 		$tmparr = array();
@@ -28,7 +28,7 @@ class PARSER{
 	public function getEndpointUrlPattern($url){
 		$e = $url;
 
-		if($e == "/api/auth/login" || $e == "/api/auth/logout"){ return $e; }
+		if($e == "/api/v1/auth/login" || $e == "/api/v1/auth/logout"){ return $e; }
 
 		$e = explode("?", $e)[0];
 		$e = explode("/", $e);
@@ -40,9 +40,7 @@ class PARSER{
 	}
 
 	public function makeToken($l, $p){
-		$token = SHA1($l."-".$p."-".SALT);
-		return $token;
+		return SHA1($l."-".$p."-".SALT);
 	}
 
 }
-?>
