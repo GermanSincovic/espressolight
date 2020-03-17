@@ -20,5 +20,3 @@ class DB_connection{
 global $DB;
 $DB = new DB_connection(new mysqli(DB_HOST, DB_USER, DB_PASS));
 $DB = $DB -> db_link;
-
-?>
