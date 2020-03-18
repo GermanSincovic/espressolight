@@ -5,13 +5,13 @@ global $mysqli;
 define("DOMAIN", "http://".$_SERVER['HTTP_HOST']."/");
 // vardump($_SERVER);
 
-define("DB_HOST", "192.168.0.102");
+define("DB_HOST", "localhost");
 
 define("DB_NAME", "espressolight");
 
-define("DB_USER", "root");
+define("DB_USER", "admin");
 
-define("DB_PASS", "");
+define("DB_PASS", "admin");
 
 define("SALT", "cf0665bea84");
 
