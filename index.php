@@ -8,6 +8,7 @@ new MODEL_LOADER();
 
 $Parser = new Parser();
 $Router = new Router();
+debug($Router);
 $Auth = new Auth();
 
 if($Router -> interface == 'api'){
