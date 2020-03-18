@@ -1,5 +1,5 @@
 <?
-class API{
+class old_api{
 
 	private $method;
 	private $endpoint;
