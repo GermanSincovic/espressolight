@@ -24,7 +24,7 @@ class Router{
     }
 
     public function getAPIEndpointPattern(){
-        return preg_replace('/(\/)(\d+)(?=(\/|$))/', '{id}', $this -> path);
+        return preg_replace('/(\/)(\d+)(?=(\/|$))/', '$1{id}', $this -> path);
     }
 
 }
