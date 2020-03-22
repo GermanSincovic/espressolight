@@ -13,10 +13,11 @@ class DB_connection{
 		        $this -> db_link -> select_db(DB_NAME);
 		    }
 		}
-		return $this -> db_link;
+
 	}
 
 }
 
 global $DB_connection;
 $DB_connection = new DB_connection();
+$DB_connection =  $DB_connection -> db_link;
