@@ -13,13 +13,13 @@ class API_Auth extends API{
         global $Parser;
         global $DB_connection;
 
-//         $Parser -> DBResponseToArray(
-         echo   $DB_connection -> query(
+         echo $Parser -> DBResponseToArray(
+            $DB_connection -> query(
                 "SELECT * FROM `users` WHERE "
                 ."`user_login`='". $this -> body['login'] ."' AND"
                 ."`user_password`='" . $Parser -> getPassHash($this -> body['password'])."'"
-            );
-//        );
+            )
+        );
     }
 
     private function logout(){
