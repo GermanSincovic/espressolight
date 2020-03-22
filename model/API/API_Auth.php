@@ -16,7 +16,7 @@ class API_Auth extends API{
 //         $Parser -> DBResponseToArray(
          echo   $DB_connection -> query(
                 "SELECT * FROM `users` WHERE "
-                ."`user_login`='". $this -> body['login'] ."'"
+                ."`user_login`='". $this -> body['login'] ."' AND"
                 ."`user_password`='" . $Parser -> getPassHash($this -> body['password'])."'"
             );
 //        );
