@@ -25,8 +25,8 @@ class Parser{
 		return $tmparr;
 	}
 
-	public function makeToken($l, $p){
-		return SHA1($l."-".$p."-".SALT);
+	public function getPassHash($p){
+		return SHA1($p."-".SALT);
 	}
 
 }

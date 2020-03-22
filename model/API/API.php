@@ -1,13 +1,18 @@
 <?php
 class API{
 
-    private $method;
-    private $endpoint;
-    private $body;
+    public $method;
+    public $endpoint;
+    public $body;
+    public $get;
 
+    public function __construct(){
 
-    private function registerEndpoint($endpoint, $method, $function){
-        $this -> endpoint_map[$endpoint][$method] = $function;
+        global $Router;
+
+        $this -> method = $_SERVER['REQUEST_METHOD'];
+        $this -> endpoint = $Router -> urlPattern;
+        $this -> body = $_POST ? $_POST : json_decode(file_get_contents('php://input'), TRUE);
+        $this -> get = $Router -> varsGet;
     }
-
 }

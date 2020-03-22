@@ -3,8 +3,8 @@ class DB_connection{
 
 	public $db_link;
 
-	public function __construct($obj){
-		$this -> db_link = $obj;
+	public function __construct(){
+		$this -> db_link = new mysqli(DB_HOST, DB_USER, DB_PASS);
 		$this -> db_link -> select_db(DB_NAME);
 		if($this -> db_link -> errno){
 			try {
@@ -13,10 +13,10 @@ class DB_connection{
 		        $this -> db_link -> select_db(DB_NAME);
 		    }
 		}
+		return $this -> db_link;
 	}
-	
+
 }
 
-global $DB;
-$DB = new DB_connection(new mysqli(DB_HOST, DB_USER, DB_PASS));
-$DB = $DB -> db_link;
+global $DB_connection;
+$DB_connection = new DB_connection();

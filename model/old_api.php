@@ -1,4 +1,9 @@
 <?
+//
+//
+// DEPRECATED
+//
+//
 class old_api{
 
 	private $method;
