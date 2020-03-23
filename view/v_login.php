@@ -33,7 +33,7 @@
 
 			$("#login_btn").on("click", function() {
 				$.ajax({
-		            url: "/api/auth/login",
+		            url: "/api/v1/auth/login",
 		            type: "POST",
 		            data: {
 		            	"login": $("#login")[0].value,

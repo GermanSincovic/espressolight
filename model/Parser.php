@@ -17,7 +17,7 @@ class Parser{
 		return $tmparr;
 	}
 
-	public function DBResponseToArraySingle($response){
+	public static function DBResponseToArraySingle($response){
 		$tmparr = array();
 		while ($row = $response -> fetch_assoc()) {
 			$tmparr = $row;
@@ -25,7 +25,11 @@ class Parser{
 		return $tmparr;
 	}
 
-	public function getPassHash($p){
+	public function arrayToJSON($array){
+	    return json_encode($array);
+    }
+
+	public static function getPassHash($p){
 		return SHA1($p."-".SALT);
 	}
 

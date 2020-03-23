@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ua">
 	<head>
 		<title>Espresso | Control panel</title>
 		<link rel="stylesheet" href="<?=DOMAIN.'css/bootstrap.min.css';?>">
@@ -21,14 +21,14 @@
 						<a data-route="companies" class="nav-link" href="#companies"><h5>Компании</h5></a>
 					</li>
 					<li class="nav-item">
-						<a data-route="users"class="nav-link" href="#users"><h5>Пользователи</h3></a>
+						<a data-route="users" class="nav-link" href="#users"><h5>Пользователи</h5></a>
 					</li>
 					<li class="nav-item">
 						<a data-route="other" class="nav-link" href="#other"><h5>Другое</h5></a>
 					</li>
 				</ul>
 				<div class="px-3 text-muted">
-					<a href=""><?=$Auth->getName();?></a>
+					<a href="">[NAME]</a>
 				</div>
 				<form method="POST" class="form-inline my-2 my-lg-0" onsubmit="return false;">
 					<input id="logout" class="btn btn-outline-secondary my-2 my-sm-0" type="submit" value="Выход">
@@ -46,11 +46,11 @@
 		<script type="text/javascript">
 			$("#logout").on('click', function(){
 				$.ajax({
-		            url: "/api/auth/logout",
+		            url: "/api/v1/auth/logout",
 		            type: "POST",
 		    		dataType: "json",
 		            success: function(){
-						window.location.href = "<?=DOMAIN;?>";
+						window.location.href = "/";
 					}
 		        });
 			});

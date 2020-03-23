@@ -10,10 +10,6 @@ class Router{
 
     public function __construct(){
         $this -> parseUrl();
-
-        if($this -> isAPI()){
-            $this -> callEndpoint();
-        }
     }
 
     public function parseUrl(){
@@ -32,14 +28,22 @@ class Router{
         return preg_replace('/(\/)(\d+)(?=(\/|$))/', '$1{id}', $this -> path);
     }
 
-    private function callEndpoint(){
+    public function callEndpoint(){
         switch ($this -> urlPattern){
-            case "/api/auth/login" : new API_Auth('login'); break;
-            case "/api/auth/logout" : new API_Auth('logout'); break;
+            case "/api/v1/auth/login" : $m = new API_Auth(); $m -> login(); break;
+            case "/api/v1/auth/logout" : API_Auth::logout(); break;
 //            case "/api/users" : ; break;
 //            case "/api/users/{id}" : ; break;
             default : ;
         }
+    }
+
+    public function showPage($page){
+        require_once('view/v_'.$page.'.php');
+    }
+
+    public function redirect($path){
+        header("Location: ".DOMAIN.$path);
     }
 
 }
