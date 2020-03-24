@@ -27,6 +27,8 @@ class API_Auth extends API{
                 $_SESSION['auth'] = $user_data;
                 new API_Response(200, [ 'message' => 'Logged in successfully'] );
             }
+        } else {
+            new API_Response(400, [ 'message' => 'Invalid request'] );
         }
 
     }
