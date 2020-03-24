@@ -30,8 +30,8 @@ class Router{
 
     public function callEndpoint(){
         switch ($this -> urlPattern){
-            case "/api/v1/auth/login" : $m = new API_Auth(); $m -> login(); break;
-            case "/api/v1/auth/logout" : API_Auth::logout(); break;
+            case "/api/v1/auth/login" : $m = (new API_Auth) -> login(); break;
+            case "/api/v1/auth/logout" : (new API_Auth) -> logout(); break;
 //            case "/api/users" : ; break;
 //            case "/api/users/{id}" : ; break;
             default : ;
