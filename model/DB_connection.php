@@ -7,11 +7,14 @@ class DB_connection{
 		$this -> db_link = new mysqli(DB_HOST, DB_USER, DB_PASS);
 		$this -> db_link -> select_db(DB_NAME);
 		if($this -> db_link -> errno){
-			try {
-		        $this -> db_link -> query("CREATE DATABASE ".DB_NAME);
-		    } finally {
-		        $this -> db_link -> select_db(DB_NAME);
+
+            // Set default DB if not exists
+            try {
+                $this -> db_link -> multi_query(file_get_contents('defaults/default_db.sql'));
+            } finally {
+                $this -> db_link -> select_db(DB_NAME);
 		    }
+
 		}
 
 	}
