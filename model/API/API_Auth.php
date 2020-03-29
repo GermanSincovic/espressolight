@@ -15,13 +15,12 @@ class API_Auth extends API{
 
         $response = $DB_connection -> query("SELECT * FROM `users` WHERE `user_login`='". $this -> body['login'] ."' AND `user_password`='" . Parser::getPassHash($this -> body['password'])."'");
 
-//        debug($DB_connection - errno);
         if($DB_connection -> errno == 0) {
             if ($response->num_rows == 1) {
                 $user_data = Parser::DBResponseToArraySingle($response);
                 unset($user_data['user_password']);
                 $_SESSION['auth'] = $user_data;
-                new API_Response(200, [ 'message' => 'Logged in successfully'] );
+                new API_Response(200, [ 'user' => $user_data ] );
             } else {
                 new API_Response(403, [ 'message' => 'Access denied'] );
             }

@@ -34,27 +34,6 @@ class MODEL_LOADER{
 		}
 	}
 }
-class JS_MODEL_LOADER{
-	private $root_dir;
-	public function __construct(){
-		$this -> root_dir = realpath( __DIR__ . '/..');
-		$this -> search($this -> root_dir . '/js'); 
-	}
-	public function search($dir){
-		$list = scandir($dir);
-		array_splice($list , 0, 2);
-		foreach( $list as $value){
-			if( !is_dir($dir."/".$value) AND $value != 'main.js' ){
-				echo "<script src='".str_replace($this -> root_dir, '..', $dir."/".$value)."'></script>";
-			}
-		}
-		foreach( $list as $value){
-			if( is_dir($dir."/".$value) ){
-				$this -> search($dir."/".$value);
-			}
-		}
-	}
-}
 
 function vardump($var){
 	echo '<pre>';
@@ -66,7 +45,3 @@ function debug($e){
 	vardump($e);
 	die();
 }
-
-
-
-?>

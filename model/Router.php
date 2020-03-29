@@ -9,17 +9,14 @@ class Router{
     public $varsPath;
 
     public function __construct(){
-        $this -> parseUrl();
-    }
-
-    public function parseUrl(){
-        $this -> url = $_SERVER['REQUEST_URI'];
-        $tmp = explode("?", $this -> url);
-        $this -> path = $tmp[0];
-        $this -> varsPath = preg_split('@/@', $this -> path, NULL, PREG_SPLIT_NO_EMPTY);
-        parse_str($tmp[1], $this -> varsGet);
+        $parsedUrl = Parser::parseUrl();
+        $this -> url = $parsedUrl['url'];
+        $this -> path = $parsedUrl['path'];
+        $this -> varsGet = $parsedUrl['varsGet'];
+        $this -> varsPath = $parsedUrl['varsPath'];
         $this -> urlPattern = $this -> getAPIEndpointPattern();
     }
+
     public function isAPI(){
         return ($this -> varsPath[0] == 'api' ? true : false);
     }
@@ -30,7 +27,7 @@ class Router{
 
     public function callEndpoint(){
         switch ($this -> urlPattern){
-            case "/api/v1/auth/login" : $m = (new API_Auth) -> login(); break;
+            case "/api/v1/auth/login" : (new API_Auth) -> login(); break;
             case "/api/v1/auth/logout" : (new API_Auth) -> logout(); break;
 //            case "/api/users" : ; break;
 //            case "/api/users/{id}" : ; break;
