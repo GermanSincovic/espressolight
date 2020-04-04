@@ -1,9 +1,6 @@
 <?
 
-global $mysqli;
-
 define("DOMAIN", "http://".$_SERVER['HTTP_HOST']."/");
-// vardump($_SERVER);
 
 define("DB_HOST", "localhost");
 
@@ -33,15 +30,4 @@ class MODEL_LOADER{
 			}
 		}
 	}
-}
-
-function vardump($var){
-	echo '<pre>';
-	print_r($var);
-	echo '</pre>';
-}
-
-function debug($e){
-	vardump($e);
-	die();
 }

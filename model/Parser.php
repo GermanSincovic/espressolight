@@ -43,4 +43,15 @@ class Parser{
         return $parsed_array;
     }
 
+    public static function vardump($e){
+        echo '<pre>';
+        print_r($e);
+        echo '</pre>';
+    }
+
+    public static function debug($e){
+        vardump($e);
+        die();
+    }
+
 }
