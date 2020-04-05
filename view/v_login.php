@@ -30,7 +30,7 @@
 					$("<small class='text-danger' id='login_failed_message'>Логин или пароль неверный</small>").insertBefore("#login");
 				}
 			}
-
+// pelmeni
 			$("#login_btn").on("click", function() {
 				$.ajax({
 		            url: "/api/v1/auth/login",
@@ -52,3 +52,4 @@
 		</script>
 	</body>
 </html>
+
