@@ -20,17 +20,16 @@
 			<!-- Default form login -->
 		</div>
 
-
-		<script src="../js/external/jquery.min.js"></script>
-		<script src="../js/external/secondary/popper.min.js"></script>
-		<script src="../js/external/secondary/bootstrap.min.js"></script>
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/popper.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
 		<script type="text/javascript">
 			function login_failed_message(){
 				if($("#login_failed_message")[0] == undefined){
 					$("<small class='text-danger' id='login_failed_message'>Логин или пароль неверный</small>").insertBefore("#login");
 				}
 			}
-// pelmeni
+
 			$("#login_btn").on("click", function() {
 				$.ajax({
 		            url: "/api/v1/auth/login",

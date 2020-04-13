@@ -2,7 +2,7 @@
 
 define("DOMAIN", "http://".$_SERVER['HTTP_HOST']."/");
 
-define("DB_HOST", "localhost");
+define("DB_HOST", $_SERVER['HTTP_HOST']);
 
 define("DB_NAME", "espressolight");
 

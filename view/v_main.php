@@ -18,13 +18,13 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul id="nav-controls" class="navbar-nav mr-auto">
 					<li class="nav-item">
-						<a data-route="companies" class="nav-link" href="#companies"><h5>Компании</h5></a>
+						<a data-route="companies" class="nav-link" href="companies"><h5>Компании</h5></a>
 					</li>
 					<li class="nav-item">
-						<a data-route="users" class="nav-link" href="#users"><h5>Пользователи</h5></a>
+						<a data-route="users" class="nav-link" href="users"><h5>Пользователи</h5></a>
 					</li>
 					<li class="nav-item">
-						<a data-route="other" class="nav-link" href="#other"><h5>Другое</h5></a>
+						<a data-route="other" class="nav-link" href="other"><h5>Другое</h5></a>
 					</li>
 				</ul>
 				<div class="px-3 text-muted">
@@ -41,8 +41,10 @@
 		<section id="main" class="mt-5 p-3 bg-white shadow rounded hidden">
 		</section>
 		<div id="spinner" class="hidden"><span></span><span>ЗАГРУЗКА...</span></div>
-		<?new JS_MODEL_LOADER();?>
-		<script src="../js/main.js"></script>
+        <script src="../js/jquery.min.js"></script>
+        <script src="../js/popper.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+		<script type="module" src="../js/main.js"></script>
 		<script type="text/javascript">
 			$("#logout").on('click', function(){
 				$.ajax({

@@ -1,3 +1,13 @@
+import {Router} from './modules/Router.js';
+
+$( document ).ready( Router.init() );
+
+$("body").on("click", "a", function (e){
+	e.preventDefault();
+	history.pushState(null, null, e.currentTarget.href);
+	Router.init();
+});
+
 var head_name_arr = {
 	"id": "ID",
 	"name": "Имя",
