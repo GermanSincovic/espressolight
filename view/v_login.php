@@ -17,38 +17,12 @@
 					</form>
 				</div>
 			</div>
-			<!-- Default form login -->
 		</div>
 
 		<script src="../js/jquery.min.js"></script>
 		<script src="../js/popper.min.js"></script>
 		<script src="../js/bootstrap.min.js"></script>
-		<script type="text/javascript">
-			function login_failed_message(){
-				if($("#login_failed_message")[0] == undefined){
-					$("<small class='text-danger' id='login_failed_message'>Логин или пароль неверный</small>").insertBefore("#login");
-				}
-			}
-
-			$("#login_btn").on("click", function() {
-				$.ajax({
-		            url: "/api/v1/auth/login",
-		            type: "POST",
-		            data: {
-		            	"login": $("#login")[0].value,
-		            	"password": $("#password")[0].value
-		            },
-		    		dataType: "json",
-		            success: function(){
-						window.location.href = "/";
-					},
-					error: function(){
-						login_failed_message();
-					}
-		        });
-			});
-			
-		</script>
+		<script type="module" src="../js/main.js"></script>
 	</body>
 </html>
 

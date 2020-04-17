@@ -46,16 +46,7 @@
         <script src="../js/bootstrap.min.js"></script>
 		<script type="module" src="../js/main.js"></script>
 		<script type="text/javascript">
-			$("#logout").on('click', function(){
-				$.ajax({
-		            url: "/api/v1/auth/logout",
-		            type: "POST",
-		    		dataType: "json",
-		            success: function(){
-						window.location.href = "/";
-					}
-		        });
-			});
+
 		</script>
 	</body>
 </html>
