@@ -5,7 +5,7 @@ $( document ).ready( Router.init() );
 
 $("body").on("click", "a", function (e){
 	e.preventDefault();
-	history.pushState(null, null, e.currentTarget.href);
+	history.replaceState(null, null, e.currentTarget.href);
 	Router.init();
 });
 

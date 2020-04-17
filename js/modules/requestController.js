@@ -18,14 +18,14 @@ export var RequestController = {
         });
     },
     logout: function () {
-            $.ajax({
-                url: "/api/v1/auth/logout",
-                type: "POST",
-                dataType: "json",
-                success: function(){
-                    window.location.href = "/";
-                }
-            });
+        $.ajax({
+            url: "/api/v1/auth/logout",
+            type: "POST",
+            dataType: "json",
+            success: function(){
+                window.location.href = "/";
+            }
+        });
     }
 };
 

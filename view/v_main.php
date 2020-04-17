@@ -45,8 +45,5 @@
         <script src="../js/popper.min.js"></script>
         <script src="../js/bootstrap.min.js"></script>
 		<script type="module" src="../js/main.js"></script>
-		<script type="text/javascript">
-
-		</script>
 	</body>
 </html>
