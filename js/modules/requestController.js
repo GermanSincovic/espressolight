@@ -13,7 +13,7 @@ export var RequestController = {
                 window.location.href = "/";
             },
             error: function () {
-               return ("<small class='text-danger' id='login_failed_message'>Логин или пароль неверный</small>").insertBefore("#login");
+                loginFailedMessage();
             }
         });
     },
@@ -28,3 +28,9 @@ export var RequestController = {
             });
     }
 };
+
+function loginFailedMessage(){
+    if($("#login_failed_message")[0] == undefined) {
+        $("<small class='text-danger' id='login_failed_message'>Логин или пароль неверный</small>").insertBefore("#login");
+    }
+}
