@@ -17,7 +17,6 @@
 					</form>
 				</div>
 			</div>
-			<!-- Default form login -->
 		</div>
 
 		<script src="../js/jquery.min.js"></script>
