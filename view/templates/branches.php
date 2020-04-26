@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <div>
     some text 2 2222222
     <div id="test_id">
