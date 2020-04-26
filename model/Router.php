@@ -29,6 +29,7 @@ class Router{
         switch ($this -> urlPattern){
             case "/api/v1/auth/login" : (new API_Auth) -> login(); break;
             case "/api/v1/auth/logout" : (new API_Auth) -> logout(); break;
+            case "/api/v1/auth/current" : (new API_Auth) -> getLoggedInUserData(); break;
 //            case "/api/users" : ; break;
 //            case "/api/users/{id}" : ; break;
             default : ;
@@ -36,7 +37,7 @@ class Router{
     }
 
     public function showPage($page){
-        require_once('view/v_'.$page.'.php');
+        require_once("view/v_".$page.".php");
     }
 
     public function redirect($path){

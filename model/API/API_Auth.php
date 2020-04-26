@@ -30,6 +30,10 @@ class API_Auth extends API{
 
     }
 
+    public static function getLoggedInUserData(){
+        new API_Response(200, [ 'user' => $_SESSION['auth'] ] );
+    }
+
     public static function isLoggedIn(){
         return $_SESSION['auth']['user_id'] ? true : false ;
     }
