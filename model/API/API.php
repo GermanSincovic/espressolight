@@ -4,7 +4,6 @@ class API{
     public $method;
     public $body;
     public $get;
-    public $response;
 
     public function __construct(){
 

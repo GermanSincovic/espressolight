@@ -5,15 +5,18 @@ export var Router = {
     url: '',
     urlPattern: '',
     viewMapping: {
-        "":  "main",
-        "branches": "branches",
-        "users": "users"
+        "":  ["main", null],
+        "branches": ["branches", null],
+        "users": ["users", "api/v1/users"]
     },
     init: function () {
         this.pathParams = window.location.pathname.split('/').filter( e => {return !!e});
         this.url = this.pathParams.join('/');
         this.getUrlPattern();
-        ViewManager.render( this.viewMapping[this.urlPattern] );
+        ViewManager.render(
+            this.viewMapping[this.urlPattern] ? this.viewMapping[this.urlPattern][0] : "404",
+            this.viewMapping[this.urlPattern] ? this.viewMapping[this.urlPattern][1] : ""
+        );
     },
     getUrlPattern: function(){
         let tmparr = [];

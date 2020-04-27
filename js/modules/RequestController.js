@@ -1,3 +1,5 @@
+import {ViewManager} from "./ViewManager.js";
+
 export var RequestController = {
 
     login: function () {
@@ -31,13 +33,24 @@ export var RequestController = {
         if (template) {
             $.ajax({
                 url: "/view/templates/" + template + ".php",
-                success: function (res) {
-                    console.log(res);
+                success: function(res){
                     $("#main").html(res);
                 }
-            });
+            })
         } else {
             $("#main").text("Страница не найдена");
+        }
+    },
+    getData: function( apiEndpoint) {
+        if(apiEndpoint) {
+            $.ajax({
+                url: apiEndpoint,
+                success: function (res) {
+                    ViewManager.insertData(Array(res));
+                }
+            })
+        } else {
+            ViewManager.insertData();
         }
     }
 };

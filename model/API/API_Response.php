@@ -1,5 +1,5 @@
 <?php
-class API_Response{
+class API_Response extends API{
 
     public $code;
     public $message;
@@ -26,6 +26,7 @@ class API_Response{
     );
 
     public function __construct($code, $message){
+        parent::__construct();
         $this -> setCode($code);
         $this -> setMessage($message);
         $this -> sendResponse();

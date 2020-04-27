@@ -7,9 +7,14 @@ class API_Users extends API{
 
         $account = $_SESSION['auth']['account_id'];
         $branch = $_SESSION['auth']['branch_id'];
-        $response = $DB_connection -> query("SELECT * FROM `users` ");
-        Parser::DBResponseToArraySingle($response);
-        new API_Response(200, [ 'users' => $_SESSION['auth'] ] );
+
+        $query = "SELECT * FROM `users` ";
+        if( $account OR $branch ) { $query.= "WHERE ";}
+        if( $account ) { $query.= "`account_id`=".$account; }
+        if( $branch ) { $query.= "`branch_id`=".$branch; }
+
+        $response = $DB_connection -> query($query);
+        new API_Response(200, [ 'users' =>  Parser::DBResponseToArray($response) ] );
     }
 
 }

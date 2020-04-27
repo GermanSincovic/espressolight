@@ -5,10 +5,6 @@ class API_Auth extends API{
 
         global $DB_connection;
 
-        if($this -> method != 'POST'){
-            new API_Response(405, [ 'message' => 'Used method: '.$this -> method] );
-        }
-
         if($this -> isLoggedIn()){
             new API_Response(200, [ 'message' => 'Already logged in'] );
         }

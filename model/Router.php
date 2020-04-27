@@ -14,25 +14,24 @@ class Router{
         $this -> path = $parsedUrl['path'];
         $this -> varsGet = $parsedUrl['varsGet'];
         $this -> varsPath = $parsedUrl['varsPath'];
-        $this -> urlPattern = $this -> getAPIEndpointPattern();
+        $this -> urlPattern = $parsedUrl['urlPattern'];
     }
 
     public function isAPI(){
         return ($this -> varsPath[0] == 'api' ? true : false);
     }
 
-    public function getAPIEndpointPattern(){
-        return preg_replace('/(\/)(\d+)(?=(\/|$))/', '$1{id}', $this -> path);
-    }
-
     public function callEndpoint(){
-        switch ($this -> urlPattern){
-            case "/api/v1/auth/login" : (new API_Auth) -> login(); break;
-            case "/api/v1/auth/logout" : (new API_Auth) -> logout(); break;
-            case "/api/v1/auth/current" : (new API_Auth) -> getLoggedInUserData(); break;
-            case "/api/v1/users" : ; break;
-//            case "/api/v1/users/{id}" : ; break;
-            default : ;
+        switch ( [ $this -> urlPattern, $_SERVER['REQUEST_METHOD'] ] ){
+
+            case ["api/v1/auth/login", "POST"] : (new API_Auth) -> login(); break;
+            case ["api/v1/auth/logout", "POST" ]: (new API_Auth) -> logout(); break;
+            case ["api/v1/auth/current", "GET" ]: (new API_Auth) -> getLoggedInUserData(); break;
+
+            case ["api/v1/users", "GET" ]: (new API_Users) -> getUserList(); break;
+//            case "api/v1/users/{id}" : ; break;
+
+            default : new API_Response(400, [ 'message' => 'Check URL or Method'] );  break;
         }
     }
 
