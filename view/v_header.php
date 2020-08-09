@@ -10,18 +10,20 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul id="nav-controls" class="navbar-nav mr-auto">
+            <?if(!API_Auth::isEmployee()){?>
+                <li class="nav-item">
+                    <a data-route="accounts" class="nav-link" href="/accounts<?if(API_Auth::isOwner()){echo '/'.API_Auth::getProp('account_id');}?>"><h5>Аккаунт<?if(API_Auth::isMaster()){echo 'ы';}?></h5></a>
+                </li>
+            <?}?>
             <li class="nav-item">
-                <a data-route="companies" class="nav-link" href="/branches"><h5>Компании</h5></a>
-            </li>
-            <li class="nav-item">
-                <a data-route="users" class="nav-link" href="/users"><h5>Пользователи</h5></a>
+                <a data-route="users" class="nav-link" href="/users"><h5>Сотрудники</h5></a>
             </li>
             <li class="nav-item">
                 <a data-route="other" class="nav-link" href="/other"><h5>Другое</h5></a>
             </li>
         </ul>
         <div class="px-3 text-muted">
-            <a href=""><?=$_SESSION['auth']['user_full_name'];?></a>
+            <a href=""><?=API_Auth::getProp('user_full_name');?></a>
         </div>
         <form method="POST" class="form-inline my-2 my-lg-0" onsubmit="return false;">
             <input id="logout" class="btn btn-outline-secondary my-2 my-sm-0" type="submit" value="Выход">

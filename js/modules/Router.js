@@ -7,7 +7,9 @@ export var Router = {
     viewMapping: {
         "":  ["main", null],
         "branches": ["branches", null],
-        "users": ["users", "api/v1/users"]
+        "users": ["users", "/api/v1/users"],
+        "users/{id}": ["user", "/api/v1/users/{id}"],
+        "accounts": ["accounts", "/api/v1/accounts"]
     },
     init: function () {
         this.pathParams = window.location.pathname.split('/').filter( e => {return !!e});
@@ -24,5 +26,8 @@ export var Router = {
             element.match(/^\d+$/)? tmparr.push( "{id}" ) : tmparr.push( element ) ;
         });
         this.urlPattern = tmparr.join("/");
+    },
+    redirectTo: function(href){
+        history.pushState(null, null, href);
     }
 };

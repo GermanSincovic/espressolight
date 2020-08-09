@@ -1,5 +1,5 @@
 <?
-class QUERY{
+class Query{
 
 	private $action 	= '';
 	private $selector 	= '';
@@ -37,7 +37,7 @@ class QUERY{
 
 	public function setTable($table = ''){
 		if($table){
-			$this -> table = '`'.$table.'`';
+			$this -> table = $table;
 		} else {
 			$this -> error("Wrong Table in", __FUNCTION__);
 		}
@@ -52,10 +52,6 @@ class QUERY{
 	public function setParams($params = ''){
 		global $Auth;
 		if(is_array($params)){
-		    if($params['id']){unset($params['id']);}
-		    if($Auth -> getCompanyLimitation()){
-				$params['cid'] = $Auth -> getCompanyLimitation();
-			}
 		    $tmp = [];
     		foreach ($params as $key => $value) {
     			$tmp[] = "`".$key."`='".$value."'";
@@ -66,14 +62,10 @@ class QUERY{
 	}
 
 	public function setWhere($where = ''){
-		global $Auth;
-		if($Auth -> getCompanyLimitation()){
-			$where['cid'] = $Auth -> getCompanyLimitation();
-		}
 		$tmp = [];
 		if(is_array($where) AND $where AND $this -> action != 'INSERT INTO'){
 			foreach ($where as $key => $value) {
-				$tmp[] = "`".$key."`='".$value."'";
+				$tmp[] = "".$key."='".$value."'";
 			}
 			$tmp = implode(' AND ', $tmp);
 			$this -> where = 'WHERE '.$tmp;

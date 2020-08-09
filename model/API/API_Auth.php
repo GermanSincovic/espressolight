@@ -11,19 +11,22 @@ class API_Auth extends API{
 
         $response = $DB_connection -> query("SELECT * FROM `users` WHERE `user_login`='". $this -> body['login'] ."' AND `user_password`='" . Parser::getPassHash($this -> body['password'])."'");
 
+        // REFACTORING REQUIRED
         if($DB_connection -> errno == 0) {
-            if ($response->num_rows == 1) {
-                $user_data = Parser::DBResponseToArraySingle($response);
-                unset($user_data['user_password']);
-                $_SESSION['auth'] = $user_data;
-                new API_Response(200, [ 'user' => $user_data ] );
+            if ($response -> num_rows == 1) {
+                $_SESSION['auth'] = Parser::noPassword(Parser::DBResponseToArraySingle($response));
+                new API_Response(200, [ 'user' => $_SESSION['auth'] ] );
             } else {
-                new API_Response(403, [ 'message' => 'Access denied'] );
+                new API_Response(403);
             }
         } else {
-            new API_Response(400, [ 'message' => 'Invalid request'] );
+            new API_Response(400);
         }
 
+    }
+
+    public static function getProp($prop){
+        return $_SESSION['auth'][$prop];
     }
 
     public static function getLoggedInUserData(){
@@ -32,6 +35,18 @@ class API_Auth extends API{
 
     public static function isLoggedIn(){
         return $_SESSION['auth']['user_id'] ? true : false ;
+    }
+
+    public static function isMaster(){
+        return $_SESSION['auth']['role_id'] == 1 ? true : false ;
+    }
+
+    public static function isOwner(){
+        return $_SESSION['auth']['role_id'] == 2 ? true : false ;
+    }
+
+    public static function isEmployee(){
+        return (!API_Auth::isMaster() AND !API_Auth::isOwner());
     }
 
     public function logout(){

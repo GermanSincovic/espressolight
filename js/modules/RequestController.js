@@ -1,4 +1,5 @@
 import {ViewManager} from "./ViewManager.js";
+import {Router} from "./Router.js";
 
 export var RequestController = {
 
@@ -41,12 +42,12 @@ export var RequestController = {
             $("#main").text("Страница не найдена");
         }
     },
-    getData: function( apiEndpoint) {
+    getData: function(apiEndpoint) {
         if(apiEndpoint) {
             $.ajax({
                 url: apiEndpoint,
                 success: function (res) {
-                    ViewManager.insertData(Array(res));
+                    ViewManager.insertData(res);
                 }
             })
         } else {

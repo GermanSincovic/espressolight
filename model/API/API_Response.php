@@ -23,12 +23,13 @@ class API_Response extends API{
         503 => 'Service Unavailable',
         504 => 'Gateway Time-out',
         505 => 'HTTP Version Not Supported',
+        520 => 'Unknown Error'
     );
 
-    public function __construct($code, $message){
+    public function __construct($code, $message = false){
         parent::__construct();
         $this -> setCode($code);
-        $this -> setMessage($message);
+        $this -> setMessage( $message ? $message : [ 'message' => $this -> http[$code]] );
         $this -> sendResponse();
         die();
     }

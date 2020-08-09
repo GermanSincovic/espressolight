@@ -6,7 +6,7 @@ class Parser{
 		while ($row = $response -> fetch_assoc()) {
 			$tmparr[] = $row;
 		}
-		return $tmparr;
+		return Parser::noPassword($tmparr);
 	}
 
 	public function DBResponseToArrayWithId($response){
@@ -58,8 +58,18 @@ class Parser{
     }
 
     public static function debug($e){
-        vardump($e);
+        Parser::vardump($e);
         die();
     }
 
+    public static function noPassword($data){
+	    if($data[0]){
+	        foreach($data as $k => $v){
+                unset($data[$k]['user_password']);
+            }
+        } else {
+            unset($data['user_password']);
+        }
+	    return $data;
+    }
 }
