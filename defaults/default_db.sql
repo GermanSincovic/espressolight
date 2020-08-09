@@ -100,8 +100,8 @@ CREATE TABLE IF NOT EXISTS `users` (
     PRIMARY KEY (`user_id`)
 );
 
-CREATE TABLE IF NOT EXISTS `users` (
-    `access_rul_id`            bigint AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `access_rules` (
+    `access_rule_id`           bigint AUTO_INCREMENT,
     'access_rule_accounts'     varchar(50) DEFAULT '--' not null,
     'access_rule_companies'    varchar(50) DEFAULT '--' not null,
     'access_rule_contragents'  varchar(50) DEFAULT '--' not null,
