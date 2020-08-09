@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `access_rules` (
     'access_rule_recipes'      varchar(50) DEFAULT '--' not null,
     'access_rule_roles'        varchar(50) DEFAULT '--' not null,
     'access_rule_users'        varchar(50) DEFAULT '--' not null,
-    PRIMARY KEY (`access_rul_id`)
+    PRIMARY KEY (`access_rule_id`)
 );
 
 INSERT INTO `users` (`user_id`, `account_id`, `role_id`, `branch_id`, `user_login`, `user_password`, `user_first_name`, `user_second_name`, `user_full_name`, `user_email`, `user_phone`, `user_comment`, `user_active`) VALUES
