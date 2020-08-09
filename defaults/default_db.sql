@@ -101,17 +101,17 @@ CREATE TABLE IF NOT EXISTS `users` (
 );
 
 CREATE TABLE IF NOT EXISTS `access_rules` (
-    `access_rule_id`           bigint AUTO_INCREMENT,
-    'access_rule_accounts'     varchar(50) DEFAULT '--' not null,
-    'access_rule_companies'    varchar(50) DEFAULT '--' not null,
-    'access_rule_contragents'  varchar(50) DEFAULT '--' not null,
-    'access_rule_expenses'     varchar(50) DEFAULT '--' not null,
-    'access_rule_incoming'     varchar(50) DEFAULT '--' not null,
-    'access_rule_nomenclature' varchar(50) DEFAULT '--' not null,
-    'access_rule_prices'       varchar(50) DEFAULT '--' not null,
-    'access_rule_recipes'      varchar(50) DEFAULT '--' not null,
-    'access_rule_roles'        varchar(50) DEFAULT '--' not null,
-    'access_rule_users'        varchar(50) DEFAULT '--' not null,
+    `access_rule_id`         bigint NOT NULL AUTO_INCREMENT,
+    `access_rule_accounts`     varchar(50) NOT NULL DEFAULT '--',
+    `access_rule_companies`    varchar(50) NOT NULL DEFAULT '--',
+    `access_rule_contragents`  varchar(50) NOT NULL DEFAULT '--',
+    `access_rule_expenses`     varchar(50) NOT NULL DEFAULT '--',
+    `access_rule_incoming`     varchar(50) NOT NULL DEFAULT '--',
+    `access_rule_nomenclature` varchar(50) NOT NULL DEFAULT '--',
+    `access_rule_prices`       varchar(50) NOT NULL DEFAULT '--',
+    `access_rule_recipes`      varchar(50) NOT NULL DEFAULT '--',
+    `access_rule_roles`        varchar(50) NOT NULL DEFAULT '--',
+    `access_rule_users`        varchar(50) NOT NULL DEFAULT '--',
     PRIMARY KEY (`access_rule_id`)
 );
 
