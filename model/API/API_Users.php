@@ -64,7 +64,6 @@ class API_Users extends API{
         new API_Response(200, Parser::trimPassword(Parser::DBResponseToArray($response)));
     }
 
-
     public function createUser(){
 
         if(!API_Auth::hasWriteAccessTo('users')){
@@ -101,8 +100,8 @@ class API_Users extends API{
             new API_Response(520, [ 'message' => $DB_connection -> error]);
         }
         new API_Response(200, $DB_connection -> insert_id);
-
     }
+
     public function updateUser(){
 
         if(!API_Auth::hasWriteAccessTo('users')){
@@ -167,8 +166,6 @@ class API_Users extends API{
         } else {
             new API_Response(200);
         }
-
-
     }
 
     public function deleteUser(){
