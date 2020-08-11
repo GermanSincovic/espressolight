@@ -6,7 +6,7 @@ class Parser{
 		while ($row = $response -> fetch_assoc()) {
 			$tmparr[] = $row;
 		}
-		return Parser::noPassword($tmparr);
+		return Parser::trimPassword($tmparr);
 	}
 
 	public function DBResponseToArrayWithId($response){
@@ -58,11 +58,11 @@ class Parser{
     }
 
     public static function debug($e){
-        Parser::vardump($e);
+        print_r($e);
         die();
     }
 
-    public static function noPassword($data){
+    public static function trimPassword($data){
 	    if($data[0]){
 	        foreach($data as $k => $v){
                 unset($data[$k]['user_password']);
@@ -71,5 +71,22 @@ class Parser{
             unset($data['user_password']);
         }
 	    return $data;
+    }
+
+    public static function isValid($type, $target){
+
+	    $idPattern          = "/^\d+$/";
+	    $loginPattern       = "/^[A-Za-z_0-9-]{6,20}$/";
+	    $passwordPattern    = "/^[A-Za-z_0-9-]{8,32}$/";
+	    $namePattern        = "/^[A-Za-zА-Яа-я ']{2,}$/";
+
+        switch ($type){
+            case 'id': return preg_match($idPattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'login': return preg_match($loginPattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'password': return preg_match($passwordPattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'email': return filter_var($target, FILTER_VALIDATE_EMAIL) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'name': return preg_match($namePattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
+        }
+
     }
 }

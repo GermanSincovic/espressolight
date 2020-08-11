@@ -9,7 +9,7 @@ class API_Accounts extends API{
         $query->setAction('SELECT');
         $query->setTable('accounts');
         $query->setSelector(['accounts.*', 'users.user_full_name', 'users.user_email']);
-        $query->setJoin('RIGHT JOIN users ON accounts.owner_id = users.user_id');
+        $query->setJoin('INNER JOIN users ON accounts.owner_id = users.user_id');
 
         $response = $DB_connection -> query($query->assembly());
 

@@ -1,6 +1,15 @@
 <?php
 class API_Users extends API{
 
+    public function __construct(){
+
+        parent::__construct();
+        if(!API_Auth::isLoggedIn()){
+            new API_Response(403);
+        }
+
+    }
+
     public function getUserList(){
 
         global $DB_connection;
@@ -26,12 +35,12 @@ class API_Users extends API{
         if($DB_connection -> errno){
             new API_Response(520, [ 'message' => $DB_connection -> error]);
         }
-        new API_Response(200, Parser::noPassword(Parser::DBResponseToArray($response)));
+        new API_Response(200, Parser::trimPassword(Parser::DBResponseToArray($response)));
     }
 
     public function getUser(){
 
-        global $DB_connection, $Router;
+        global $DB_connection;
 
         $query = new Query();
         $query -> setAction('SELECT');
@@ -55,10 +64,43 @@ class API_Users extends API{
         if($DB_connection -> errno){
             new API_Response(520, [ 'message' => $DB_connection -> error]);
         }
-        new API_Response(200, Parser::noPassword(Parser::DBResponseToArray($response)));
+        new API_Response(200, Parser::trimPassword(Parser::DBResponseToArray($response)));
     }
 
     public function createUser(){
+
+        if(API_Auth::hasWriteAccessTo('users')){
+            new API_Response(403);
+        }
+
+        global $DB_connection;
+
+        Parser::isValid('login', $this->body['user_login']);
+        Parser::isValid('password', $this->body['user_password']);
+        Parser::isValid('email', $this->body['user_email']);
+        Parser::isValid('id', $this->body['account_id']);
+        Parser::isValid('id', $this->body['role_id']);
+        Parser::isValid('id', $this->body['branch_id']);
+        Parser::isValid('name', $this->body['user_first_name']);
+        Parser::isValid('name', $this->body['user_second_name']);
+
+
+        $query = new Query();
+        $query -> setAction('INSERT');
+        $query -> setTable('users');
+        $query -> setParams([
+
+            // REFACTORING BY USER PRIVILEGES (MASTER OWNER)
+
+            'user_login' => $this->body['user_login'],
+            'user_password' => $this->body['user_password'],
+            'user_email' => $this->body['user_email'],
+            'account_id' => $this->body['account_id'],
+            'role_id' => $this->body['role_id'],
+            'branch_id' => $this->body['branch_id'],
+            'user_first_name' => $this->body['user_first_name'],
+            'user_second_name' => $this->body['user_second_name'],
+        ]);
 
     }
 

@@ -76,10 +76,8 @@ CREATE TABLE IF NOT EXISTS `recipes` (
 CREATE TABLE IF NOT EXISTS `roles` (
     `role_id`               bigint(20) NOT NULL AUTO_INCREMENT,
     `account_id`            bigint(20) NOT NULL,
+    `access_rule_id`        bigint(20) NOT NULL,
     `role_name`             varchar(250) NOT NULL DEFAULT '',
-    `role_access_users`     varchar(5) DEFAULT '--',
-    `role_access_accounts`  varchar(5) DEFAULT '--',
-    `role_access_branches`  varchar(5) DEFAULT '--',
     PRIMARY KEY (`role_id`)
 );
 
@@ -101,9 +99,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 );
 
 CREATE TABLE IF NOT EXISTS `access_rules` (
-    `access_rule_id`         bigint NOT NULL AUTO_INCREMENT,
+    `access_rule_id`           bigint NOT NULL AUTO_INCREMENT,
     `access_rule_accounts`     varchar(50) NOT NULL DEFAULT '--',
-    `access_rule_companies`    varchar(50) NOT NULL DEFAULT '--',
+    `access_rule_branches`     varchar(50) NOT NULL DEFAULT '--',
     `access_rule_contragents`  varchar(50) NOT NULL DEFAULT '--',
     `access_rule_expenses`     varchar(50) NOT NULL DEFAULT '--',
     `access_rule_incoming`     varchar(50) NOT NULL DEFAULT '--',
@@ -115,5 +113,11 @@ CREATE TABLE IF NOT EXISTS `access_rules` (
     PRIMARY KEY (`access_rule_id`)
 );
 
-INSERT INTO `users` (`user_id`, `account_id`, `role_id`, `branch_id`, `user_login`, `user_password`, `user_first_name`, `user_second_name`, `user_full_name`, `user_email`, `user_phone`, `user_comment`, `user_active`) VALUES
-    (1, 0, 0, NULL, 'admin', '7d21ce99db191e62f86c1b83da17127911145f2b', 'admin', 'admin', 'admin admin', 'admin@gmail.com', '+38(063)adm-in', '', 1);
+INSERT INTO `espressolight`.`users` (`account_id`, `role_id`, `branch_id`, `user_login`, `user_password`, `user_first_name`, `user_second_name`, `user_full_name`, `user_email`, `user_phone`, `user_comment`, `user_active`)
+VALUES ('0', '1', '0', 'admin', '7d21ce99db191e62f86c1b83da17127911145f2b', 'admin', 'admin', 'admin admin', 'admin@gmail.com', '+38(063)adm-in', '', '1');
+
+INSERT INTO `espressolight`.`roles` (`account_id`, `access_rule_id`, `role_name`)
+VALUES ('0', '1', 'master');
+
+INSERT INTO `espressolight`.`access_rules` (`access_rule_id`, `access_rule_accounts`, `access_rule_branches`, `access_rule_contragents`, `access_rule_expenses`, `access_rule_incoming`, `access_rule_nomenclature`, `access_rule_prices`, `access_rule_recipes`, `access_rule_roles`, `access_rule_users`)
+VALUES ('1', 'rw', 'rw', 'rw', 'rw', 'rw', 'rw', 'rw', 'rw', 'rw', 'rw');

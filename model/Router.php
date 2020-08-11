@@ -22,6 +22,7 @@ class Router{
     }
 
     public function callEndpoint(){
+
         switch ( [ $this -> urlPattern, $_SERVER['REQUEST_METHOD'] ] ){
 
             case ["api/v1/auth/login", "POST"] : (new API_Auth) -> login(); break;
