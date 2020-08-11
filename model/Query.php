@@ -30,7 +30,7 @@ class Query{
 				$selector[$k] = ''.$v.'';
 			}
 			$this -> selector = implode(',',$selector);
-		} elseif($this -> action == 'SELECT') {
+		} elseif($this -> action == 'SELECT' OR $this -> action == 'DELETE') {
 			$this -> selector = '*';
 		}
 	}

@@ -79,6 +79,7 @@ class Parser{
 	    $loginPattern       = "/^[A-Za-z_0-9-]{6,20}$/";
 	    $passwordPattern    = "/^[A-Za-z_0-9-]{8,32}$/";
 	    $namePattern        = "/^[A-Za-zА-Яа-я ']{2,}$/";
+	    $phonePattern       = "/^\d{12}$/";
 
         switch ($type){
             case 'id': return preg_match($idPattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
@@ -86,6 +87,8 @@ class Parser{
             case 'password': return preg_match($passwordPattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
             case 'email': return filter_var($target, FILTER_VALIDATE_EMAIL) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
             case 'name': return preg_match($namePattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'phone': return preg_match($phonePattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'text': return strip_tags($target) == $target ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
         }
 
     }
