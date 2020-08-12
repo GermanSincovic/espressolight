@@ -7,7 +7,6 @@ class API_Users extends API{
         if(!API_Auth::isLoggedIn()){
             new API_Response(403);
         }
-
     }
 
     public function getUserList(){
@@ -98,8 +97,9 @@ class API_Users extends API{
         $DB_connection -> query($query -> assembly());
         if($DB_connection -> errno){
             new API_Response(520, [ 'message' => $DB_connection -> error]);
+        } else {
+            new API_Response(200, [ 'message' => "Insertion ID ".$DB_connection -> insert_id]);
         }
-        new API_Response(200, $DB_connection -> insert_id);
     }
 
     public function updateUser(){
@@ -191,8 +191,4 @@ class API_Users extends API{
             new API_Response(200);
         }
     }
-
-
-
-
 }
