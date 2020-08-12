@@ -100,7 +100,6 @@ class API_Users extends API{
         } else {
             new API_Response(200, [ 'message' => "Insertion ID ".$DB_connection -> insert_id]);
         }
-    //test
     }
 
     public function updateUser(){
