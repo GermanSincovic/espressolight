@@ -73,6 +73,19 @@ class Parser{
 	    return $data;
     }
 
+    public static function getAnnotationInfo($className){
+        $rc = new ReflectionClass($className);
+        $annotation = $rc->getDocComment();
+        $data = preg_replace('/[\/\s\*]/', "", $annotation);
+        $data = preg_split("/@/", $data, 0, PREG_SPLIT_NO_EMPTY);
+        foreach ($data as $v) {
+            $tmp = explode("=", $v);
+            $res[$tmp[0]] = $tmp[1];
+        }
+        if(!$res){ return false; }
+        return $res;
+    }
+
     public static function isValid($type, $target){
 
 	    $idPattern          = "/^\d+$/";

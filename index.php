@@ -4,7 +4,7 @@ session_start();
 
 require_once("model/config.php");
 
-new MODEL_LOADER();
+//new MODEL_LOADER();
 
 $Router = new Router();
 
