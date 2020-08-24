@@ -1,4 +1,7 @@
 <?
+namespace controller;
+
+use model\API\API_Response;
 
 class Router{
 
@@ -17,10 +20,6 @@ class Router{
         $this -> urlPattern = $parsedUrl['urlPattern'];
     }
 
-    public function isAPI(){
-        return ($this -> varsPath[0] == 'api' ? true : false);
-    }
-
     public function callEndpoint(){
 
         switch ( [ $this -> urlPattern, $_SERVER['REQUEST_METHOD'] ] ){
@@ -29,9 +28,9 @@ class Router{
             case ["api/v1/auth/logout", "POST"]: (new API_Auth) -> logout(); break;
             case ["api/v1/auth/current", "GET"]: (new API_Auth) -> getLoggedInUserData(); break;
 
-            case ["api/v1/users", "GET"]: (new API_Users) -> getUserList(); break;
-            case ["api/v1/users/{id}", "GET"] : (new API_Users) -> getUser(); break;
-            case ["api/v1/users", "PUT"] : (new API_Users) -> createUser(); break;
+            case ["api/v1/users", "GET"]: (new UserController) -> getUserList(); break;
+            case ["api/v1/users/{id}", "GET"] : (new UserController) -> getUser(); break;
+            case ["api/v1/users", "PUT"] : (new UserController) -> createUser(); break;
             case ["api/v1/users/{id}", "POST"] : (new API_Users) -> updateUser(); break;
             case ["api/v1/users/{id}", "DELETE"] : (new API_Users) -> deleteUser(); break;
 
@@ -43,10 +42,6 @@ class Router{
 
             default : new API_Response(400, [ 'message' => 'Check URL or Method'] );  break;
         }
-    }
-
-    public function showPage($page){
-        require_once("view/v_".$page.".php");
     }
 
     public function redirect($path){

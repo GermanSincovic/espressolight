@@ -1,5 +1,5 @@
 <?php
-// NOT IN USE
+namespace model\Entities;
 /**
  * @table=users
  * @primary_key=user_id

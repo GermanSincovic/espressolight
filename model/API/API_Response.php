@@ -1,4 +1,9 @@
 <?php
+
+namespace model\API;
+
+use model\API\API as API;
+
 class API_Response extends API{
 
     public $code;
@@ -26,11 +31,11 @@ class API_Response extends API{
         520 => 'Unknown Error'
     );
 
-    public function __construct($code, $message = false){
+    public function __construct($code, $message = false, $debugMode = false){
         parent::__construct();
         $this -> setCode($code);
         $this -> setMessage( $message ? $message : [ 'message' => $this -> http[$code]] );
-        $this -> sendResponse();
+        $this -> sendResponse($debugMode);
         die();
     }
 
@@ -42,10 +47,14 @@ class API_Response extends API{
         $this->message = $message;
     }
 
-    private function sendResponse(){
+    private function sendResponse($debugMode){
         header('HTTP/1.1 '.$this -> code.' '.$this -> http[ $this -> code ] );
         http_response_code( $this -> code );
-        echo json_encode( $this -> message );
+        if($debugMode) {
+            var_dump($this->message);
+        } else {
+            echo json_encode($this->message);
+        }
     }
 
 }

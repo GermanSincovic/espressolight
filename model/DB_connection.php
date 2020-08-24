@@ -16,5 +16,5 @@ class DB_connection extends mysqli {
 	}
 }
 
-global $DB_connection;
-$DB_connection = new DB_connection();
+//global $DB_connection;
+//$DB_connection = new DB_connection();

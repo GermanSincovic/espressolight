@@ -1,6 +1,15 @@
 <?
+
+namespace controller;
+
+use mysqli_result;
+
 class Parser{
-	
+
+    /**
+     * @param $response mysqli_result
+     * @return mixed
+     */
 	public static function DBResponseToArray($response){
 		$tmparr = array();
 		while ($row = $response -> fetch_assoc()) {
@@ -9,7 +18,11 @@ class Parser{
 		return Parser::trimPassword($tmparr);
 	}
 
-	public function DBResponseToArrayWithId($response){
+    /**
+     * @param $response mysqli_result
+     * @return mixed
+     */
+	public static function DBResponseToArrayWithId($response){
 		$tmparr = array();
 		while ($row = $response -> fetch_assoc()) {
 			$tmparr[$row["id"]] = $row;
@@ -17,6 +30,10 @@ class Parser{
 		return $tmparr;
 	}
 
+    /**
+     * @param $response mysqli_result
+     * @return mixed
+     */
 	public static function DBResponseToArraySingle($response){
 		$tmparr = array();
 		while ($row = $response -> fetch_assoc()) {
@@ -73,19 +90,6 @@ class Parser{
 	    return $data;
     }
 
-    public static function getAnnotationInfo($className){
-        $rc = new ReflectionClass($className);
-        $annotation = $rc->getDocComment();
-        $data = preg_replace('/[\/\s\*]/', "", $annotation);
-        $data = preg_split("/@/", $data, 0, PREG_SPLIT_NO_EMPTY);
-        foreach ($data as $v) {
-            $tmp = explode("=", $v);
-            $res[$tmp[0]] = $tmp[1];
-        }
-        if(!$res){ return false; }
-        return $res;
-    }
-
     public static function isValid($type, $target){
 
 	    $idPattern          = "/^\d+$/";
@@ -95,13 +99,13 @@ class Parser{
 	    $phonePattern       = "/^\d{12}$/";
 
         switch ($type){
-            case 'id': return preg_match($idPattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'login': return preg_match($loginPattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'password': return preg_match($passwordPattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'email': return filter_var($target, FILTER_VALIDATE_EMAIL) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'name': return preg_match($namePattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'phone': return preg_match($phonePattern, $target) ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'text': return strip_tags($target) == $target ? true : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'id': return preg_match($idPattern, $target) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'login': return preg_match($loginPattern, $target) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'password': return preg_match($passwordPattern, $target) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'email': return filter_var($target, FILTER_VALIDATE_EMAIL) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'name': return preg_match($namePattern, $target) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'phone': return preg_match($phonePattern, $target) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'text': return strip_tags($target) == $target ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
         }
 
     }

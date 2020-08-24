@@ -1,26 +1,10 @@
 <?
 
-session_start();
+require_once './vendor/autoload.php';
 
-require_once("model/config.php");
+//use utils\ORM;
 
-//new MODEL_LOADER();
+require 'config.php';
+require 'autoloader.php';
 
-$Router = new Router();
-
-//if( $Router -> isAPI() ) {
-    $Router -> callEndpoint();
-//} else {
-//    if( API_Auth::isLoggedIn() ){
-//        $Router -> showPage('main');
-//    } else {
-//        if($Router -> urlPattern == '/login'){
-//            $Router -> showPage('login');
-//        } elseif ($Router -> urlPattern == '/logout'){
-//            API_Auth::logout();
-//            header("Location: ".DOMAIN.'/login');
-//        } else {
-//            $Router -> redirect('login');
-//        }
-//    }
-//}
+(new controller\Router) -> callEndpoint();
