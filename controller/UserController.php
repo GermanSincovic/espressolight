@@ -4,7 +4,7 @@ namespace controller;
 
 use model\API\API;
 use model\API\API_Response;
-use RedBeanPHP\R as R;
+use R;
 use RedBeanPHP\RedException\SQL;
 
 class UserController extends Controller {

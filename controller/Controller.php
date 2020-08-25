@@ -2,7 +2,7 @@
 
 namespace controller;
 
-use RedBeanPHP\R as R;
+use R;
 
 class Controller{
     public function __construct(){
