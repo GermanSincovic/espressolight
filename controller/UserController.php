@@ -24,6 +24,7 @@ class UserController extends Controller {
         $result ? new API_Response(200, $result) : new API_Response(404);
     }
 
+//    TODO: NEED TO PROVIDE $data AND DECREASE CLASS DEPENDENCY
     public function createUser(){
         $newUser = R::dispense('users');
         $data = (new API)->body;
@@ -50,5 +51,8 @@ class UserController extends Controller {
         } catch (SQL $e) {
             new API_Response(520, $e->getMessage());
         }
+
+        // TODO: CREATE deleteUser METHOD
+
     }
 }
