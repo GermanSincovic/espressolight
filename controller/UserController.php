@@ -19,15 +19,13 @@ class UserController extends Controller {
         new API_Response(200,$result);
     }
 
-    public function getUser(){
-        $result = R::find('users', 'id = '.(new Router) -> varsPath[3]);
+    public function getUser($id){
+        $result = R::findOne('users', 'id = '. $id);
         $result ? new API_Response(200, $result) : new API_Response(404);
     }
 
-//    TODO: NEED TO PROVIDE $data AND DECREASE CLASS DEPENDENCY
-    public function createUser(){
+    public function createUser($data){
         $newUser = R::dispense('users');
-        $data = (new API)->body;
 //          REQUIRED FIELDS
         $newUser -> account_id = Parser::isValid('id', $data['account_id']);
         $newUser -> role_id = Parser::isValid('id', $data['role_id']);
@@ -51,8 +49,18 @@ class UserController extends Controller {
         } catch (SQL $e) {
             new API_Response(520, $e->getMessage());
         }
-
-        // TODO: CREATE deleteUser METHOD
-
     }
+
+    public function deleteUser($id){
+        $result = R::findOne('users', 'id = '. $id);
+        if($result->count() == 0) {
+            new API_Response(404);
+        }
+        R::trash($result);
+        $result = R::findOne('users', 'id = '. $id);
+        if($result->count() == 0) {
+            new API_Response(200, "ID(".$id.") deleted");
+        }
+    }
+
 }

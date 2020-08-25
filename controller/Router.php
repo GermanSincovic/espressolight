@@ -1,6 +1,7 @@
 <?
 namespace controller;
 
+use model\API\API;
 use model\API\API_Response;
 
 class Router{
@@ -29,10 +30,10 @@ class Router{
             case ["api/v1/auth/current", "GET"]: (new API_Auth) -> getLoggedInUserData(); break;
 
             case ["api/v1/users", "GET"]: (new UserController) -> getUserList(); break;
-            case ["api/v1/users/{id}", "GET"] : (new UserController) -> getUser(); break;
-            case ["api/v1/users", "PUT"] : (new UserController) -> createUser(); break;
+            case ["api/v1/users/{id}", "GET"] : (new UserController) -> getUser((new Router) -> varsPath[3]); break;
+            case ["api/v1/users", "PUT"] : (new UserController) -> createUser((new API)->body); break;
             case ["api/v1/users/{id}", "POST"] : (new API_Users) -> updateUser(); break;
-            case ["api/v1/users/{id}", "DELETE"] : (new API_Users) -> deleteUser(); break;
+            case ["api/v1/users/{id}", "DELETE"] : (new UserController) -> deleteUser((new Router) -> varsPath[3]); break;
 
             case ["api/v1/accounts", "GET" ]: (new API_Accounts) -> getAccountList(); break;
             case ["api/v1/accounts/{id}", "GET" ]: (new API_Accounts) -> getAccount(); break;
