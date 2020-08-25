@@ -2,6 +2,7 @@
 
 namespace controller;
 
+use model\API\API_Response;
 use mysqli_result;
 
 class Parser{
@@ -90,22 +91,21 @@ class Parser{
 	    return $data;
     }
 
+    /**
+     * @param $type string id | login | password | email | name | phone | text | boolean
+     * @return API_Response
+     * @return string
+     */
     public static function isValid($type, $target){
-
-	    $idPattern          = "/^\d+$/";
-	    $loginPattern       = "/^[A-Za-z_0-9-]{6,20}$/";
-	    $passwordPattern    = "/^[A-Za-z_0-9-]{8,32}$/";
-	    $namePattern        = "/^[A-Za-zА-Яа-я ']{2,}$/";
-	    $phonePattern       = "/^\d{12}$/";
-
         switch ($type){
-            case 'id': return preg_match($idPattern, $target) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'login': return preg_match($loginPattern, $target) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'password': return preg_match($passwordPattern, $target) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'email': return filter_var($target, FILTER_VALIDATE_EMAIL) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'name': return preg_match($namePattern, $target) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'phone': return preg_match($phonePattern, $target) ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
-            case 'text': return strip_tags($target) == $target ? $target : new API_Response(400, ["message" => "Invalid $type"]); break;
+            case 'id': return preg_match(PATTERN_ID, $target) ? $target : new API_Response(400, "Invalid $type"); break;
+            case 'login': return preg_match(PATTERN_LOGIN, $target) ? $target : new API_Response(400, "Invalid $type"); break;
+            case 'password': return preg_match(PATTERN_PASSWORD, $target) ? $target : new API_Response(400, "Invalid $type"); break;
+            case 'email': return filter_var($target, FILTER_VALIDATE_EMAIL) ? $target : new API_Response(400, "Invalid $type"); break;
+            case 'name': return preg_match(PATTERN_NAME, $target) ? $target : new API_Response(400, "Invalid $type"); break;
+            case 'phone': return preg_match(PATTERN_PHONE, $target) ? $target : new API_Response(400, "Invalid $type"); break;
+            case 'text': return strip_tags($target) == $target ? $target : new API_Response(400, "Invalid $type"); break;
+            case 'boolean': return preg_match(PATTERN_BOOLEAN, $target) ? $target : new API_Response(400, "Invalid $type"); break;
         }
 
     }

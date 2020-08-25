@@ -53,7 +53,7 @@ class API_Response extends API{
         if($debugMode) {
             var_dump($this->message);
         } else {
-            echo json_encode($this->message);
+            echo json_encode([ 'response_code' => $this -> code, 'message' => $this->message ]);
         }
     }
 

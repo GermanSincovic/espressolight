@@ -6,19 +6,19 @@ namespace model\Entities;
  */
 class User{
 
-    public $user_id;
-    public $account_id;
-    public $role_id;
-    public $branch_id;
-    public $user_login;
-    public $user_password;
-    public $user_first_name;
-    public $user_second_name;
-    public $user_full_name;
-    public $user_email;
-    public $user_phone;
-    public $user_comment;
-    public $user_active;
+    private $user_id;
+    private $account_id;
+    private $role_id;
+    private $branch_id;
+    private $user_login;
+    private $user_password;
+    private $user_first_name;
+    private $user_second_name;
+    private $user_full_name;
+    private $user_email;
+    private $user_phone;
+    private $user_comment;
+    private $user_active;
 
     public function getUserId(){
         return $this->user_id;

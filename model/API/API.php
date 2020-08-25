@@ -6,9 +6,9 @@ use controller\Router;
 
 class API{
 
-    public static $method;
-    public static $body;
-    public static $get;
+    public $method;
+    public $body;
+    public $get;
 
     public function __construct(){
 
@@ -16,9 +16,9 @@ class API{
         header("Access-Control-Allow-Methods: *");
         header("Content-Type: application/json");
 
-        self::$method = $_SERVER['REQUEST_METHOD'];
-        self::$body = $_POST ? $_POST : json_decode(file_get_contents('php://input'), TRUE);
-        self::$get = (new Router) -> varsGet;
+        $this -> method = $_SERVER['REQUEST_METHOD'];
+        $this -> body = $_POST ? $_POST : json_decode(file_get_contents('php://input'), TRUE);
+        $this -> get = (new Router) -> varsGet;
 
     }
 }

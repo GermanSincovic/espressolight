@@ -26,21 +26,29 @@ class UserController extends Controller {
 
     public function createUser(){
         $newUser = R::dispense('users');
-        $newUser -> account_id = API::$body['account_id'];
-        $newUser -> role_id = API::$body['role_id'];
-        $newUser -> branch_id = API::$body['branch_id'];
-        $newUser -> user_login = API::$body['user_login'];
-        $newUser -> user_first_name = API::$body['user_first_name'];
-        $newUser -> user_second_name = API::$body['user_second_name'];
-//        $newUser -> user_full_name = $newUser -> user_first_name . $newUser -> user_last_name;
-        $newUser -> user_email = API::$body['user_email'];
-        $newUser -> user_password = API::$body['user_password'];
+        $data = (new API)->body;
+//          REQUIRED FIELDS
+        $newUser -> account_id = Parser::isValid('id', $data['account_id']);
+        $newUser -> role_id = Parser::isValid('id', $data['role_id']);
+        $newUser -> branch_id = Parser::isValid('id', $data['branch_id']);
+        $newUser -> user_login = Parser::isValid('login', $data['user_login']);
+        $newUser -> user_first_name = Parser::isValid('name', $data['user_first_name']);
+        $newUser -> user_second_name = Parser::isValid('name', $data['user_second_name']);
+        $newUser -> user_full_name = $newUser -> user_first_name . $newUser -> user_last_name;
+        $newUser -> user_email = Parser::isValid('email', $data['user_email']);
+        $newUser -> user_password = Parser::getPassHash(Parser::isValid('password', $data['user_password']));
+        $newUser -> user_second_name = Parser::isValid('name', $data['user_second_name']);
+//          EOF REQUIRED FIELDS
+        if(isset($data['user_phone'])){ $newUser -> user_phone = Parser::isValid('phone', $data['user_phone']); }
+        if(isset($data['user_comment'])){ $newUser -> user_phone = Parser::isValid('text', $data['user_comment']); }
+        if(isset($data['user_active'])){ $newUser -> user_active = Parser::isValid('boolean', $data['user_phone']); }
+        $newUser -> user_created_at = date('Y-m-d H:i:s');
+        $newUser -> user_updated_at = $newUser -> user_created_at;
         try {
             $id = R::store($newUser);
-            new API_Response(200, R::find('users', 'id = '.$id));
+            new API_Response(200, R::findOne('users', 'id = '.$id));
         } catch (SQL $e) {
-            new API_Response(520, ['message' => $e], true);
-//            Parser::debug($e);
+            new API_Response(520, $e->getMessage());
         }
     }
 }
